@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Print GitHub Event
         run: |
-          echo $${{ github.event }}
+          echo ${{ toJSON(github) }}
 
   # Determining next release version from current release version
   determine-next-release-version:
