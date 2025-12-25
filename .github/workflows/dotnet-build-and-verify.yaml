@@ -80,15 +80,13 @@ jobs:
           name: test-results
           path: "**/*.trx"
 
-      # TODO: consider just a zip of the src\DotnetPsCmds\bin directory
-      - name: Build packages
-        run: >
-          dotnet pack --configuration ${{ inputs.configuration }}
-          -p:Version=${{ inputs.version }} -o bin/${{ inputs.configuration }}
+      - name: Create build artifact
+        run: |
+          (cd ${{ inputs.main-library-subdir }}/bin && zip -r ${{ inputs.artifact-name }}.zip .)
 
-      - name: Upload Nuget Packages as artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: "src/bin/${{ inputs.configuration }}/*.nupkg"
+          path: "${{ inputs.main-library-subdir }}/bin/${{ inputs.artifact-name }}.zip"
           if-no-files-found: error
