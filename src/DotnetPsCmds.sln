@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pri.Essentials.Abstractions", "Abstractions\Pri.Essentials.Abstractions.csproj", "{F3DF47F1-9E9A-4DF6-AE1D-726296391459}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E9B3F43A-EA3B-4AC1-B2A8-BAD960E249DB}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\determine-next-release-version.yaml = ..\.github\workflows\determine-next-release-version.yaml
+		..\.github\workflows\dotnet-build-and-verify.yaml = ..\.github\workflows\dotnet-build-and-verify.yaml
+		..\.github\workflows\pr.yaml = ..\.github\workflows\pr.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +79,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {417A6A7D-AFF2-48F5-8198-1CCA798D9640}
 	EndGlobalSection
 EndGlobal
