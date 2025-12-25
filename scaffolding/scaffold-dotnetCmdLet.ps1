@@ -26,6 +26,8 @@ dotnet sln $srcPath add .\$srcPath\$productName 2>&1 >NUL || throw "Command fail
 dotnet new xunit3 -o .\$srcPath\Tests -n Tests 2>&1 >NUL || throw "Command failed to execute";
 if(test-path -Path .\$srcPath\Tests\UnitTest1.cs) { del .\$srcPath\Tests\UnitTest1.cs  2>&1 >NUL || throw "Command failed to execute"; }
 dotnet reference add .\$srcPath\$productName --project .\$srcPath\Tests 2>&1 >NUL || throw "Command failed to execute";
+dotnet add package NSubstitute
+dotnet add .\$srcPath\$productName package "NSubstitute"
 dotnet sln $srcPath add .\$srcPath\Tests 2>&1 >NUL || throw "Command failed to execute";
 
 mkdir "$($rootPath)\scaffolding" 2>&1 >NUL || $(throw 'error creating scaffolding directory.')
