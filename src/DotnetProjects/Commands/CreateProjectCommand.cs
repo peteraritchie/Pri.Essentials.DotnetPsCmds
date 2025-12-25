@@ -42,6 +42,7 @@ public class CreateProjectCommand(
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
 	}
 
+	/// <inheritdoc />
 	protected override string BuildCommandLine()
 	{
 		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";

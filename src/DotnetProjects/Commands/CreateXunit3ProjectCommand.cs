@@ -24,6 +24,7 @@ namespace Pri.Essentials.DotnetProjects.Commands;
 /// <param name="frameworkName">
 /// The target framework for the new project.
 /// </param>
+/// <param name="fileSystem"></param>
 public class CreateXunit3ProjectCommand(
 	IShellExecutor shellExecutor,
 	string outputDirectory,
@@ -56,6 +57,7 @@ public class CreateXunit3ProjectCommand(
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
 	}
 
+	/// <inheritdoc />
 	protected override string BuildCommandLine()
 	{
 		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";

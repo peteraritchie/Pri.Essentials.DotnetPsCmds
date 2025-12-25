@@ -2,6 +2,12 @@
 
 namespace Pri.Essentials.DotnetProjects.Commands;
 
+/// <summary>
+/// Represents a command that creates a new .NET solution file using the 'dotnet new sln' command.
+/// </summary>
+/// <param name="shellExecutor">The shell executor used to run command-line operations.</param>
+/// <param name="outputDirectory">The directory in which to create the solution file. If null or empty, the current directory is used.</param>
+/// <param name="outputName">The name of the solution file to create.</param>
 public class CreateSolutionCommand(IShellExecutor shellExecutor, string outputDirectory, string outputName)
 	: CommandBase(shellExecutor)
 {

@@ -11,10 +11,19 @@ namespace Pri.Essentials.DotnetProjects;
 
 public class DotnetProject : DotnetFile
 {
+	/// <summary>
+	/// Initializes a new instance of the DotnetProject class with the specified project directory and name.
+	/// </summary>
+	/// <param name="directory">The path to the project directory. Can be null to use the current directory.</param>
+	/// <param name="name">The name of the project. Can be null if the project name should be inferred.</param>
 	public DotnetProject(string? directory, string? name) : base(directory, name)
 	{
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the DotnetProject class for the specified project file path.
+	/// </summary>
+	/// <param name="path">The full file system path to the .NET project file. Cannot be null or empty.</param>
 	public DotnetProject(string path) : base(path)
 	{
 	}
@@ -24,6 +33,11 @@ public class DotnetProject : DotnetFile
 	/// </summary>
 	public override string FullPath => Path.Combine(Directory, Path.ChangeExtension(Name, ".csproj"));
 
+	/// <summary>
+	/// Adds a reference to the specified project in the current project.
+	/// </summary>
+	/// <param name="project">The project to add as a reference. Cannot be null.</param>
+	/// <returns>The project that was added as a reference.</returns>
 	public DotnetProject AddProjectReference(DotnetProject project)
 	{
 		var executor = ShellExecutor.Instance;
@@ -32,6 +46,11 @@ public class DotnetProject : DotnetFile
 		return project;
 	}
 
+	/// <summary>
+	/// Adds a new class with the specified name to the project.
+	/// </summary>
+	/// <param name="className">The name of the class to add to the project. Cannot be null or empty.</param>
+	/// <returns>The current <see cref="DotnetProject"/> instance, enabling method chaining.</returns>
 	public DotnetProject AddClass(string className)
 	{
 		var executor = ShellExecutor.Instance;
@@ -41,6 +60,12 @@ public class DotnetProject : DotnetFile
 
 	}
 
+	/// <summary>
+	/// Adds a NuGet package reference to the project.
+	/// </summary>
+	/// <param name="packageName">The name of the NuGet package to add. Cannot be null or empty.</param>
+	/// <param name="packageVersion">The version of the NuGet package to add. If null or empty, the latest available version is used.</param>
+	/// <returns>The current <see cref="DotnetProject"/> instance, enabling method chaining.</returns>
 	public DotnetProject AddPackageReference(string packageName, string? packageVersion = null)
 	{
 		var executor = ShellExecutor.Instance;

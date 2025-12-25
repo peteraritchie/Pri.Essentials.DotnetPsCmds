@@ -22,13 +22,14 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
     [Parameter(Mandatory = false)]
     public string? OutputName{ get; set; }
 
+    /// <inheritdoc />
     protected override void BeginProcessing()
     {
         if (string.IsNullOrWhiteSpace(OutputDirectory)) OutputDirectory = SessionState.Path.CurrentFileSystemLocation.Path;
         if (string.IsNullOrWhiteSpace(OutputName)) OutputName = Path.GetFileName(OutputDirectory);
     }
 
-    // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
+    /// <inheritdoc />
     protected override void ProcessRecord()
     {
 	    var executor = ShellExecutor.Instance;
@@ -50,7 +51,12 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
         }
     }
 
-    // This method will be called once at the end of pipeline execution; if no input is received, this method is not called
+    /// <summary>
+	/// Performs end-of-processing tasks after all pipeline input has been received and processed.
+	/// </summary>
+	/// <remarks>This method is called once at the end of pipeline execution. It is not invoked if no input is
+	/// received by the cmdlet. Override this method to implement any cleanup or finalization logic that should occur after
+	/// all input has been processed.</remarks>
     protected override void EndProcessing()
     {
     }
