@@ -18,12 +18,13 @@ env:
 
 jobs:
   debug:
+    if: ${{ env.DEBUG == 'true' }}
     name: Debug Info
     runs-on: ubuntu-latest
     steps:
-      - name: Print GitHub Event
+      - name: Print GitHub object
         run: |
-          echo ${{ toJSON(github) }}
+          echo "${{ toJSON(github) }}"
 
   # Determining next release version from current release version
   determine-next-release-version:
