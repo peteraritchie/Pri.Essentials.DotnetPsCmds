@@ -15,6 +15,7 @@ on:  # yamllint disable-line rule:truthy
 env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
+  DEBUG: true
 
 jobs:
   debug:
