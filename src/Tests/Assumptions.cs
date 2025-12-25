@@ -1,4 +1,6 @@
-﻿using Microsoft.TemplateEngine.Abstractions.Installer;
+﻿using System.Runtime.InteropServices;
+
+using Microsoft.TemplateEngine.Abstractions.Installer;
 
 namespace Tests;
 
@@ -35,6 +37,7 @@ public class Assumptions
     [Fact]
     void ProcessingLeafPath()
     {
+	    Assert.SkipUnless(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test that requires Windows environment.");
         var path = @"C:\dir1\dir2\dir3";
         Assert.Equal("dir3", Path.GetFileName(path));
     }
@@ -42,6 +45,7 @@ public class Assumptions
     [Fact]
     void PathCombine()
     {
+	    Assert.SkipUnless(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test that requires Windows environment.");
         var path = @"C:\dir1\dir2\dir3";
         Assert.Equal(@"C:\dir1\dir2\dir3\file.ext", Path.Combine(path, Path.ChangeExtension("file", ".ext")));
     }
@@ -49,6 +53,7 @@ public class Assumptions
     [Fact]
     void PathSplit()
     {
+	    Assert.SkipUnless(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test that requires Windows environment.");
 		var path = @"C:\dir1\dir2\dir3\file.ext";
 		Assert.Equal("file", Path.GetFileNameWithoutExtension(path));
 		Assert.Equal(@"C:\dir1\dir2\dir3", Path.GetDirectoryName(path));
@@ -57,6 +62,7 @@ public class Assumptions
 	[Fact]
 	public void C()
 	{
+		Assert.SkipUnless(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test that requires Windows environment.");
 		var dir = "dir";
 		Assert.False(Path.IsPathRooted(dir));
 		var currentDir = @"c:\sub";
