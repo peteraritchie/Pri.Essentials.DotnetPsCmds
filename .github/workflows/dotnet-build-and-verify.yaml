@@ -63,7 +63,7 @@ jobs:
         shell: pwsh
         run: |
           dotnet build --configuration ${{ inputs.configuration }} --no-restore
-          find ${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin
+          find ${{ inputs.main-library-subdir }}/bin
 
       - name: Run tests
         id: run-tests
