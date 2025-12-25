@@ -25,7 +25,14 @@ jobs:
       - name: Print GitHub object
         if: env.DEBUG == 'true'
         run: |
-          echo "${{ toJSON(github) }}"
+          echo "${{ toJSON(github) }}" > debug.txt
+      - name: Upload debug info
+        if: env.DEBUG == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-info
+          path: debug.txt
+
 
   # Determining next release version from current release version
   determine-next-release-version:
