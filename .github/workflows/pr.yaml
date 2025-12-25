@@ -21,7 +21,7 @@ jobs:
   debug:
     name: Debug Info
     runs-on: ubuntu-latest
-    if: ${{ env.DEBUG == 'true' }}
+    if: env.DEBUG == 'true'
     steps:
       - name: Print GitHub object
         if: env.DEBUG == 'true'
