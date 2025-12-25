@@ -17,6 +17,14 @@ env:
   DOTNET_CORE_VERSION: 10.0.x
 
 jobs:
+  debug:
+    name: Debug Info
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print GitHub Event
+        run: |
+          echo $${{ github.event }}
+
   # Determining next release version from current release version
   determine-next-release-version:
     name: Determine next Release version
