@@ -1,7 +1,7 @@
 ---
 name: PR Checks
 run-name: >
-  Verify build and test - '${{ github.event.head_commit.message }}',
+  Verify build and test - '${{ github.event.pull_request.title }}',
   from ${{ github.ref }} by @${{ github.actor }}
 
 on:  # yamllint disable-line rule:truthy
@@ -15,16 +15,23 @@ on:  # yamllint disable-line rule:truthy
 env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
+  DEBUG: true
 
 jobs:
   debug:
     name: Debug Info
     runs-on: ubuntu-latest
+    if: vars.DEBUG == 'true'
     steps:
       - name: Print GitHub object
-        if: env.DEBUG == 'true'
         run: |
-          echo "${{ toJSON(github) }}"
+          echo "${{ toJSON(github) }}" > debug.txt
+      - name: Upload debug info
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-info
+          path: debug.txt
+
 
   # Determining next release version from current release version
   determine-next-release-version:
@@ -44,3 +51,4 @@ jobs:
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
       artifact-name: Packages
+      main-library-subdir: DotnetPsCmds

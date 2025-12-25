@@ -39,4 +39,4 @@ git init $rootPath;
 git --work-tree=$rootPath --git-dir=$rootPath/.git add .;
 git --work-tree=$rootPath --git-dir=$rootPath/.git commit -m "initial commit";
 
-# Need command like Test-DotnetNew.
+md $rootPath\.github\workflows
