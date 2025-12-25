@@ -1,7 +1,7 @@
 ---
 name: PR Checks
 run-name: >
-  Verify build and test - '${{ github.event.head_commit.message }}',
+  Verify build and test - '${{ github.event.pull_request.title }}',
   from ${{ github.ref }} by @${{ github.actor }}
 
 on:  # yamllint disable-line rule:truthy
@@ -21,6 +21,7 @@ jobs:
   debug:
     name: Debug Info
     runs-on: ubuntu-latest
+    if: ${{ env.DEBUG == 'true' }}
     steps:
       - name: Print GitHub object
         if: env.DEBUG == 'true'
