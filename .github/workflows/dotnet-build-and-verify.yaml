@@ -28,6 +28,11 @@ on:  # yamllint disable-line rule:truthy
         required: false
         type: string
         default: Packages
+      main-library-subdir:
+        description: "Directory of the main library project"
+        required: false
+        type: string
+        default: .
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
@@ -77,6 +82,7 @@ jobs:
       # TODO: consider just a zip of the src\DotnetPsCmds\bin directory
       - name: Build packages
         run: >
+          find ${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin
           dotnet pack --configuration ${{ inputs.configuration }}
           -p:Version=${{ inputs.version }} -o bin/${{ inputs.configuration }}
 
