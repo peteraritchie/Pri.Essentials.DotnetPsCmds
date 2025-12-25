@@ -51,3 +51,4 @@ jobs:
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
       artifact-name: Packages
+      main-library-subdir: DotnetPsCmds
