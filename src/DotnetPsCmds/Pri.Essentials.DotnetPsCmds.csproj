@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>Pri.Essentials.DotnetPsCmds</AssemblyName>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
