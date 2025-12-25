@@ -63,7 +63,6 @@ jobs:
         shell: pwsh
         run: |
           dotnet build --configuration ${{ inputs.configuration }} --no-restore
-          find ${{ inputs.main-library-subdir }}/bin
 
       - name: Run tests
         id: run-tests
@@ -83,6 +82,7 @@ jobs:
       - name: Create build artifact
         run: |
           (cd ${{ inputs.main-library-subdir }}/bin && zip -r ${{ inputs.artifact-name }}.zip .)
+          find ${{ inputs.main-library-subdir }}/bin
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
