@@ -18,11 +18,11 @@ env:
 
 jobs:
   debug:
-    if: env.DEBUG == 'true'
     name: Debug Info
     runs-on: ubuntu-latest
     steps:
       - name: Print GitHub object
+        if: env.DEBUG == 'true'
         run: |
           echo "${{ toJSON(github) }}"
 
