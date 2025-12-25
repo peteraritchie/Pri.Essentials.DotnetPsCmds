@@ -74,6 +74,7 @@ jobs:
           name: test-results
           path: "**/*.trx"
 
+      # TODO: consider just a zip of the src\DotnetPsCmds\bin directory
       - name: Build packages
         run: >
           dotnet pack --configuration ${{ inputs.configuration }}
