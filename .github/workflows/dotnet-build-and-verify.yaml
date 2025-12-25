@@ -79,14 +79,9 @@ jobs:
           name: test-results
           path: "**/*.trx"
 
-      - name: Create build artifact
-        run: |
-          (cd ${{ inputs.main-library-subdir }}/bin && zip -r ${{ inputs.artifact-name }}.zip .)
-          find ${{ inputs.main-library-subdir }}/bin
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: "${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin/${{ inputs.artifact-name }}.zip"
+          path: "${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin"
           if-no-files-found: error
