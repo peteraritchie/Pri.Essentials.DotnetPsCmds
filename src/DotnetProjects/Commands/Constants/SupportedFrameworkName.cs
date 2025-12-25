@@ -3,6 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pri.Essentials.DotnetProjects.Commands.Constants;
 
+/// <summary>
+/// Represents a supported .NET or .NET Standard framework name as a strongly typed value.
+/// </summary>
+/// <remarks>Use the predefined static fields, such as <see cref="Net10"/>, <see cref="Net9"/>, <see
+/// cref="Net8"/>, <see cref="NetStandard20"/>, and <see cref="NetStandard21"/>, to refer to specific supported
+/// framework versions. This type provides type safety and avoids errors associated with using raw string literals for
+/// framework names.</remarks>
 public sealed class SupportedFrameworkName
 {
 	private readonly string name;
@@ -11,12 +18,21 @@ public sealed class SupportedFrameworkName
 		this.name = name;
 	}
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public static readonly SupportedFrameworkName Net10 = new("net10.0");
 	public static readonly SupportedFrameworkName Net9 = new("net9.0");
 	public static readonly SupportedFrameworkName Net8 = new("net8.0");
 	public static readonly SupportedFrameworkName NetStandard20 = new("netstandard2.0");
 	public static readonly SupportedFrameworkName NetStandard21 = new("netstandard2.1");
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+	/// <summary>
+	/// Gets a read-only dictionary containing all supported framework names mapped to their corresponding <see
+	/// cref="SupportedFrameworkName"/> instances.
+	/// </summary>
+	/// <remarks>The dictionary keys are string representations of supported frameworks, and the values are the
+	/// associated <see cref="SupportedFrameworkName"/> objects. This collection can be used to enumerate or look up
+	/// supported frameworks by name.</remarks>
 	public static readonly IReadOnlyDictionary<string, SupportedFrameworkName> All =
 		new Dictionary<string, SupportedFrameworkName>
 		{
@@ -27,9 +43,15 @@ public sealed class SupportedFrameworkName
 			{NetStandard21, NetStandard21},
 		};
 
-	[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+	/// <inheritdoc />
+	[ExcludeFromCodeCoverage]
 	public override string ToString() => name;
 
+	/// <summary>
+	///
+	/// </summary>
+	/// <param name="supportedFrameworkName"></param>
+	/// <returns></returns>
 	public static implicit operator string(SupportedFrameworkName supportedFrameworkName) =>
 		supportedFrameworkName.name;
 

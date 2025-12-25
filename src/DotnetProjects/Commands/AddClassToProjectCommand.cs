@@ -2,12 +2,18 @@
 
 namespace Pri.Essentials.DotnetProjects.Commands;
 
+/// <summary>
+/// An add class to project command abstraction.
+/// </summary>
 public class AddClassToProjectCommand(IShellExecutor shellExecutor,
 	DotnetProject targetProject, string className)
 	:CommandBase(shellExecutor)
 {
+	/// <inheritdoc/>
 	public override string Target => targetProject.FullPath;
+	/// <inheritdoc/>
 	public override string ActionName => $"Add class named '{className}' to {Target}";
+	/// <inheritdoc/>
 	public override Result Execute()
 	{
 		var result = shellExecutor.Execute(BuildCommandLine());

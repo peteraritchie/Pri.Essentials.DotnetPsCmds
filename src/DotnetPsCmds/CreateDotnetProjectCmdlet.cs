@@ -16,6 +16,9 @@ namespace Pri.Essentials.DotnetPsCmds;
 [OutputType(typeof(DotnetProject))]
 public class CreateDotnetProjectCmdlet : PSCmdlet
 {
+	/// <summary>
+	/// The parameter to the <code>dotnet new sln --template</code> option
+	/// </summary>
 	[Parameter(Mandatory = true,
 		Position = 0,
 		HelpMessage = "What project template to use to generate the project.")]
@@ -42,6 +45,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	[ValidateSet("net10.0", "net9.0","net8.0","standard2.0","standard2.1")]
 	public string? FrameworkName { get; set; } = SupportedFrameworkName.Net10;
 
+	/// <inheritdoc />
 	protected override void BeginProcessing()
 	{
 		if (string.IsNullOrWhiteSpace(FrameworkName) || !SupportedFrameworkName.TryParse(FrameworkName!, out frameworkName))
@@ -75,7 +79,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		}
 	}
 
-	// This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
+	/// <inheritdoc />
 	protected override void ProcessRecord()
 	{
 		var executor = ShellExecutor.Instance;
@@ -111,7 +115,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	private SupportedProjectTemplateName? supportedTemplateName;
 	private SupportedFrameworkName? frameworkName;
 
-	// This method will be called once at the end of pipeline execution; if no input is received, this method is not called
+	/// <inheritdoc />
 	protected override void EndProcessing()
 	{
 	}

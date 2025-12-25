@@ -11,16 +11,33 @@ namespace Pri.Essentials.DotnetProjects;
 /// </summary>
 public class DotnetSolution : DotnetFile
 {
+	/// <summary>
+	/// Initializes a new instance of the DotnetSolution class with the specified directory and solution name.
+	/// </summary>
+	/// <param name="directory">The path to the directory containing the solution. Can be null to use the current directory.</param>
+	/// <param name="name">The name of the solution. Can be null to use a default or inferred name.</param>
 	public DotnetSolution(string? directory, string? name) : base(directory, name)
 	{
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the DotnetSolution class for the specified solution file path.
+	/// </summary>
+	/// <param name="path">The full file system path to the .NET solution file. Cannot be null or empty.</param>
 	public DotnetSolution(string path) : base(path)
 	{
 	}
 
+	/// <summary>
+	/// Gets the full file system path to the solution file, including the ".sln" extension.
+	/// </summary>
 	public override string FullPath => Path.Combine(Directory, Path.ChangeExtension(Name, ".sln"));
 
+	/// <summary>
+	/// Adds the specified project to the current solution.
+	/// </summary>
+	/// <param name="project">The project to add to the solution. Cannot be null.</param>
+	/// <returns>The project that was added to the solution.</returns>
 	public DotnetProject AddProject(DotnetProject project)
 	{
 		var executor = ShellExecutor.Instance;

@@ -6,26 +6,41 @@ using Pri.Essentials.DotnetProjects.Commands;
 
 namespace Pri.Essentials.DotnetPsCmds;
 
+/// <summary>
+/// Represents a PowerShell cmdlet that adds a .NET project to an existing solution using the dotnet CLI.
+/// </summary>
+/// <remarks>This cmdlet supports ShouldProcess, enabling confirmation prompts and WhatIf support. Use this cmdlet
+/// to programmatically add a project to a solution file within automation scripts or interactive PowerShell sessions.
+/// The cmdlet writes the updated solution object to the output pipeline upon successful completion.</remarks>
 [Cmdlet(VerbsCommon.Add, nameof(DotnetProject), SupportsShouldProcess = true)]
 [OutputType(typeof(DotnetSolution))]
 public class AddDotnetProjectCmdlet : PSCmdlet
 {
+	/// <summary>
+	///
+	/// </summary>
 	[Parameter(Mandatory = true,
 		Position = 0,
 		ValueFromPipeline = true,
 		HelpMessage = "What solution to add the project to.")]
 	public DotnetSolution Solution { get; set; }
 
+	/// <summary>
+	///
+	/// </summary>
 	[Parameter(Mandatory = true,
 		Position = 1,
 		HelpMessage = "What project to add to the solution.")]
 	public DotnetProject Project { get; set; }
 
+	/// <inheritdoc />
 	protected override void BeginProcessing()
 	{
 		// TODO: parameter checks?
 		base.BeginProcessing();
 	}
+
+	/// <inheritdoc />
 	protected override void ProcessRecord()
 	{
 		var executor = ShellExecutor.Instance;
@@ -49,6 +64,7 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		return new AddProjectToSolutionCommand(executor, solution, project);
 	}
 
+	/// <inheritdoc />
 	protected override void EndProcessing()
 	{
 		base.EndProcessing();

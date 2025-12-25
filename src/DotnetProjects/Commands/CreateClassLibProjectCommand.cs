@@ -5,6 +5,18 @@ using Pri.Essentials.DotnetProjects.Commands.Constants;
 
 namespace Pri.Essentials.DotnetProjects.Commands;
 
+/// <summary>
+/// Represents a command that creates a new .NET class library project using the specified parameters.
+/// </summary>
+/// <remarks>This command automates the creation of a .NET class library project by invoking the appropriate
+/// 'dotnet new classlib' command. After project creation, it attempts to remove the default 'Class1.cs' file if it
+/// exists. This class is typically used in build automation or tooling scenarios where programmatic project creation is
+/// required.</remarks>
+/// <param name="shellExecutor">The shell executor used to run the project creation command.</param>
+/// <param name="outputDirectory">The directory in which to create the new class library project. If empty or null, the current directory is used.</param>
+/// <param name="outputName">The name to assign to the new project. If empty or null, the default project name is used.</param>
+/// <param name="frameworkName">The target framework for the new class library project.</param>
+/// <param name="fileSystem">An optional file system abstraction used for file operations. If null, the default file system is used.</param>
 public class CreateClassLibProjectCommand(
 	IShellExecutor shellExecutor,
 	string outputDirectory,
@@ -15,8 +27,10 @@ public class CreateClassLibProjectCommand(
 {
 	private readonly IFileSystem fileSystem = fileSystem ?? IFileSystem.Default;
 
+	/// <inheritdoc />
 	public override string ActionName => BuildCommandLine();
 
+	/// <inheritdoc />
 	public override Result Execute()
 	{
 		var result = shellExecutor.Execute(BuildCommandLine());
@@ -36,6 +50,7 @@ public class CreateClassLibProjectCommand(
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
 	}
 
+	/// <inheritdoc />
 	protected override string BuildCommandLine()
 	{
 		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";

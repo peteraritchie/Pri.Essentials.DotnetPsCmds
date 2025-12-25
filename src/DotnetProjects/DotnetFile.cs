@@ -8,12 +8,21 @@ namespace Pri.Essentials.DotnetProjects;
 /// </summary>
 public abstract class DotnetFile
 {
+	/// <summary>
+	/// Initializes a new instance of the DotnetFile class with the specified directory and file name.
+	/// </summary>
+	/// <param name="directory">The path to the directory containing the file. If null, the current working directory is used.</param>
+	/// <param name="name">The name of the file. If null, the file name is derived from the specified directory path.</param>
 	protected DotnetFile(string? directory, string? name)
 	{
 		Directory = directory ?? System.IO.Directory.GetCurrentDirectory();
 		Name = name ?? Path.GetFileName(Directory);
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the DotnetFile class for the specified file path.
+	/// </summary>
+	/// <param name="path">The full file system path to the file. Cannot be null, empty, or consist only of white-space characters.</param>
 	protected DotnetFile(string path)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(path);

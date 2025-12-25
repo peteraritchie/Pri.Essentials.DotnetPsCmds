@@ -3,6 +3,9 @@
 namespace System.Runtime.CompilerServices;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
+/// <summary>
+/// WIP
+/// </summary>
 internal class IsExternalInit
 {
 }

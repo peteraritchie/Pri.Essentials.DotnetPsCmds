@@ -6,7 +6,11 @@
 /// <param name="shellExecutor"></param>
 public abstract class CommandBase(IShellExecutor shellExecutor)
 {
+	/// <summary>
+	/// The shell executor used to run shell commands.
+	/// </summary>
 	protected readonly IShellExecutor shellExecutor = shellExecutor;
+
 	/// <summary>
 	/// The target that the command will affect. Typically, file or a directory.
 	/// </summary>

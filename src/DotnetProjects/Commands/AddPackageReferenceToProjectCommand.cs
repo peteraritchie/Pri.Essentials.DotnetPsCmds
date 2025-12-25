@@ -21,6 +21,13 @@ public class AddPackageReferenceToProjectCommand(
 {
 	private readonly string? packageVersion;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AddPackageReferenceToProjectCommand"/> class with a specified package version.
+	/// </summary>
+	/// <param name="shellExecutor">The shell executor used to execute the command.</param>
+	/// <param name="targetProject">The target .NET project to which the package reference will be added.</param>
+	/// <param name="packageName">The name of the package to add as a reference.</param>
+	/// <param name="packageVersion">The version of the package to add as a reference.</param>
 	public AddPackageReferenceToProjectCommand(IShellExecutor shellExecutor,
 		DotnetProject targetProject,
 		string packageName,
@@ -35,6 +42,9 @@ public class AddPackageReferenceToProjectCommand(
 	/// <inheritdoc />
 	public override string ActionName => $"Add package '{packageName}' to {Target}";
 
+	/// <summary>
+	/// Whether it is a prerelease or not
+	/// </summary>
 	public bool IsPrerelease { get; init; }
 
 	/// <inheritdoc />
