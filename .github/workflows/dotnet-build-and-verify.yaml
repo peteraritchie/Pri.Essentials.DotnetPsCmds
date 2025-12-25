@@ -88,5 +88,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: "${{ inputs.main-library-subdir }}/bin/${{ inputs.artifact-name }}.zip"
+          path: "${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin/${{ inputs.artifact-name }}.zip"
           if-no-files-found: error
