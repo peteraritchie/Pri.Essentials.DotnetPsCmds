@@ -27,13 +27,13 @@ public partial class CreateSolutionCommandShould
 	[Fact]
 	void HaveNotNullTarget()
 	{
-		Assert.NotNull(sut.Target);
+		Assert.NotNull(sut!.Target);
 	}
 
 	[Fact]
 	void HaveCorrectCommand()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -46,7 +46,7 @@ public partial class CreateSolutionCommandShould
 	[Fact]
 	void HaveCorrectArguments()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -56,6 +56,6 @@ public partial class CreateSolutionCommandShould
 		Assert.Equal("MySolution", match.Groups[4].Value);
 	}
 
-	[GeneratedRegex(@"^(\S+ \S+) (\S+) --in-root -o (\S+) -n (\S+)$")]
+	[GeneratedRegex(@"^(\S+ \S+) (\S+) -o (\S+) -n (\S+)$")]
 	private static partial Regex GroupNameAndDirRegex();
 }

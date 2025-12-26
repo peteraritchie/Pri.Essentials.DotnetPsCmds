@@ -25,7 +25,7 @@ public partial class AddProjectReferenceToProjectCommandShould
 	[Fact]
 	void HaveCorrectDotnetCommand()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 
@@ -38,7 +38,7 @@ public partial class AddProjectReferenceToProjectCommandShould
 	[Fact]
 	void HaveCorrectDirectories()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 

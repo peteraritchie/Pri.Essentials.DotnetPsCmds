@@ -92,7 +92,7 @@ public class DotnetSolution : DotnetFile
 			outputName,
 			framework);
 		var r = createCommand.Execute() as ShellOperationResult;
-		if (!r.IsSuccessful)
+		if (!r!.IsSuccessful)
 		{
 			ThrowCreateProjectError(outputDirectory, outputName, r.OutputText, r.ErrorText);
 		}

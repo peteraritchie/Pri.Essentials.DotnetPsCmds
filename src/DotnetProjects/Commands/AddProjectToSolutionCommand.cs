@@ -17,7 +17,7 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 	public override string Target => solution.FullPath;
 
 	/// <inheritdoc />
-	public override string ActionName => $"Add {project.FullPath} to {Target}";
+	public override string ActionName => BuildCommandLine();//$"Add {project.FullPath} to {Target}";
 
 	/// <inheritdoc />
 	public override Result Execute()
@@ -28,6 +28,7 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 
 	private string BuildCommandLine()
 	{
-		return $"dotnet sln {solution.FullPath} add {project.FullPath}";
+		var otherOptions = " --in-root"; // Avoid create solution folders for each project.
+		return $"dotnet sln {solution.FullPath} add {project.FullPath}{otherOptions}";
 	}
 }

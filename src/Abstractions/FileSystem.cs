@@ -49,7 +49,9 @@ public interface IFileSystem
 	/// <param name="path">The path to the file or directory to check. This can be either an absolute or relative path. Cannot be null or
 	/// empty.</param>
 	/// <returns>true if the specified path exists as a file or directory; otherwise, false.</returns>
+#pragma warning disable PRm1010 // Method Name Does Not Have Leading Transitive Verb
 	bool Exists(string path);
+#pragma warning restore PRm1010 // Method Name Does Not Have Leading Transitive Verb
 
 	/// <summary>
 	/// Determines whether the specified file exists at the given path.
@@ -71,7 +73,9 @@ public interface IFileSystem
 	/// invalid characters.</param>
 	/// <returns>true if the specified path refers to an existing directory; otherwise, false.</returns>
 
+#pragma warning disable PRm1010 // Method Name Does Not Have Leading Transitive Verb
 	bool DirectoryExists(string path);
+#pragma warning restore PRm1010 // Method Name Does Not Have Leading Transitive Verb
 	/// <summary>
 	/// Deletes the specified file from the file system.
 	/// </summary>

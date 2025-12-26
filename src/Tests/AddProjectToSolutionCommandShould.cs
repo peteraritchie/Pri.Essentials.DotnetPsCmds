@@ -24,7 +24,7 @@ public partial class AddProjectToSolutionCommandShould
 	[Fact]
 	public void HaveCorrectCommand()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -37,7 +37,7 @@ public partial class AddProjectToSolutionCommandShould
 	[Fact]
 	public void HaveCorrectArguments()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -47,6 +47,6 @@ public partial class AddProjectToSolutionCommandShould
 		Assert.Equal(Path.Combine(directory, "testing", "testing.csproj"),  match.Groups[4].Value);
 	}
 
-	[GeneratedRegex(@"^(\S+ \S+) (\S+) (\S+) (\S+)$")]
+	[GeneratedRegex(@"^(\S+ \S+) (\S+) (\S+) (\S+) --in-root$")]
 	private static partial Regex GroupNameAndDirRegex();
 }

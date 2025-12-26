@@ -22,9 +22,8 @@ public class CreateSolutionCommand(IShellExecutor shellExecutor, string outputDi
     {
         var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
         var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
-		var otherOptions = " --in-root"; // Avoid create solution folders for each project.
 
-        return $"dotnet new sln{otherOptions}{outputDirectoryOption}{outputNameOption}";
+        return $"dotnet new sln{outputDirectoryOption}{outputNameOption}";
     }
 
 	/// <inheritdoc />

@@ -12,7 +12,7 @@ Import-Module .\src\DotnetPsCmds\bin\Debug\netstandard2.0\Pri.Essentials.DotnetP
 
 testing sln
 ```powershell
-cd .\src\experiment\DotnetPsCmds\t && Import-Module ..\src\DotnetPsCmds\bin\Debug\netstandard2.0\Pri.Essentials.DotnetPsCmds.dll && ($s = new-dotnetsolution);
+cd .\src\experiment\DotnetPsCmds\t && Import-Module ..\src\DotnetPsCmds\bin\Debug\netstandard2.0\Pri.Essentials.DotnetPsCmds.dll && ($s = New-DotnetSolution);
 ```
 
 testing module
