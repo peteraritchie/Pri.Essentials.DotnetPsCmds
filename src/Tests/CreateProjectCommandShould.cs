@@ -30,7 +30,7 @@ public partial class CreateProjectCommandShould
 	[Fact]
 	void HaveCorrectCommand()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -43,7 +43,7 @@ public partial class CreateProjectCommandShould
 	[Fact]
 	void HaveCorrectArguments()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);

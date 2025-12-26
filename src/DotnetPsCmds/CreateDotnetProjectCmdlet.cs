@@ -11,9 +11,12 @@ namespace Pri.Essentials.DotnetPsCmds;
 
 /// <summary>
 /// Implements the New_DotnetProject Cmdlet.
+/// <param type="synopsis">Creates a new .NET project.</param>
+/// <param type="description">Creates a new .NET project.</param>
 /// </summary>
 [Cmdlet(VerbsCommon.New, "DotnetProject", SupportsShouldProcess = true)]
 [OutputType(typeof(DotnetProject))]
+// ReSharper disable once UnusedType.Global
 public class CreateDotnetProjectCmdlet : PSCmdlet
 {
 	/// <summary>
@@ -44,6 +47,16 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		HelpMessage = "Which .NET framework version to use. If omitted, .NET 10 will be used.")]
 	[ValidateSet("net10.0", "net9.0","net8.0","standard2.0","standard2.1")]
 	public string? FrameworkName { get; set; } = SupportedFrameworkName.Net10;
+
+	/// <summary>
+	/// Gets or sets the solution to which the project will be added.
+	/// </summary>
+	[Parameter(Mandatory = false,
+		Position = 4,
+		ValueFromPipeline = true,
+		HelpMessage = "What solution to add the project to.")]
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
+	public DotnetSolution? Solution { get; set; }
 
 	/// <inheritdoc />
 	protected override void BeginProcessing()
@@ -84,25 +97,58 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	{
 		var executor = ShellExecutor.Instance;
 		Debug.Assert(supportedTemplateName != null);
-		var command = DetermineCommand(executor, supportedTemplateName!);
+		var createCommand = DetermineCreateCommand(executor, supportedTemplateName!);
 
-		if (ShouldProcess(command.Target, command.ActionName))
+		if (ShouldProcess(createCommand.Target, createCommand.ActionName))
 		{
 			#region to move somewhere else as one or more operations
-			var r = command.Execute() as ShellOperationResult;
+			var createResult = createCommand.Execute() as ShellOperationResult;
 			#endregion
 
-			WriteDebug($"Exit code: {r!.ExitCode}");
-			WriteDebug($"Output:{Environment.NewLine}{r.OutputText}");
-			if (!string.IsNullOrWhiteSpace(r.ErrorText))
+			// TODO: Error if exit code is non-zero?
+			if(createResult!.ExitCode != 0)
 			{
-				WriteDebug($"Error:{Environment.NewLine}{r.ErrorText}");
+				ThrowTerminatingError(errorRecord: new ErrorRecord(exception: new InvalidOperationException(
+						$"Failed to create project. Exit code {createResult.ExitCode}{Environment.NewLine}Error output:{Environment.NewLine}{createResult.ErrorText}"),
+					errorId: "CreateProjectFailed",
+					errorCategory: ErrorCategory.OperationStopped,
+					targetObject: null));
 			}
-			WriteObject(new DotnetProject(OutputDirectory, OutputName));
+			WriteDebug($"Exit code: {createResult.ExitCode}");
+			WriteDebug($"Output:{Environment.NewLine}{createResult.OutputText}");
+			if (!string.IsNullOrWhiteSpace(createResult.ErrorText))
+			{
+				WriteDebug($"Error:{Environment.NewLine}{createResult.ErrorText}");
+			}
+			var createdProject = new DotnetProject(OutputDirectory, OutputName);
+			if (Solution != null)
+			{
+				var addCommand = DetermineAddCommand(executor, Solution, createdProject);
+				if (ShouldProcess(addCommand.Target, addCommand.ActionName))
+				{
+					var addResult = addCommand.Execute() as ShellOperationResult;
+					if(addResult!.ExitCode != 0)
+					{
+						ThrowTerminatingError(errorRecord: new ErrorRecord(exception: new InvalidOperationException(
+								$"Failed to add project to solution. Exit code {addResult.ExitCode}{Environment.NewLine}Error output:{Environment.NewLine}{addResult.ErrorText}"),
+							errorId: "AddProjectToSolutionFailed",
+							errorCategory: ErrorCategory.OperationStopped,
+							targetObject: null));
+					}
+					WriteDebug($"Exit code: {addResult.ExitCode}");
+					WriteDebug($"Output:{Environment.NewLine}{addResult.OutputText}");
+					if (!string.IsNullOrWhiteSpace(addResult.ErrorText))
+					{
+						WriteDebug($"Error:{Environment.NewLine}{addResult.ErrorText}");
+					}
+				}
+			}
+
+			WriteObject(createdProject);
 		}
 	}
 
-	private CommandBase DetermineCommand(IShellExecutor executor, SupportedProjectTemplateName template)
+	private CommandBase DetermineCreateCommand(IShellExecutor executor, SupportedProjectTemplateName template)
 	{
 		return ProjectTemplateNameMapping.CommandMap[template](
 			executor,
@@ -111,6 +157,12 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			OutputName!,
 			frameworkName ?? SupportedFrameworkName.Net10);
 	}
+
+	private CommandBase DetermineAddCommand(IShellExecutor executor, DotnetSolution solution, DotnetProject project)
+	{
+		return new AddProjectToSolutionCommand(executor, solution, project);
+	}
+
 
 	private SupportedProjectTemplateName? supportedTemplateName;
 	private SupportedFrameworkName? frameworkName;

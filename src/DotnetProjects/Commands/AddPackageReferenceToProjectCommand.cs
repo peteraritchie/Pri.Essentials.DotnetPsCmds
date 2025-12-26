@@ -40,7 +40,7 @@ public class AddPackageReferenceToProjectCommand(
 	public override string Target => targetProject.FullPath;
 
 	/// <inheritdoc />
-	public override string ActionName => $"Add package '{packageName}' to {Target}";
+	public override string ActionName => BuildCommandLine();//$"Add package '{packageName}' to {Target}";
 
 	/// <summary>
 	/// Whether it is a prerelease or not
@@ -59,7 +59,7 @@ public class AddPackageReferenceToProjectCommand(
 		StringBuilder sb = new();
 		sb.Append($"dotnet add {Target} package {packageName}");
 
-		if (string.IsNullOrWhiteSpace(packageVersion))
+		if (!string.IsNullOrWhiteSpace(packageVersion))
 		{
 			sb.Append($" -v {packageVersion}");
 		}

@@ -33,7 +33,7 @@ public partial class CreateXunit3ProjectCommandShould
 	[Fact]
 	void HaveCorrectCommand()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -46,7 +46,7 @@ public partial class CreateXunit3ProjectCommandShould
 	[Fact]
 	void HaveCorrectArguments()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -61,7 +61,7 @@ public partial class CreateXunit3ProjectCommandShould
 	void HaveDeletedExtraFile()
 	{
 		spyFileSystem.Exists(Arg.Any<string>()).Returns(true);
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyFileSystem.Received().Exists(Path.Combine(directory, "UnitTest1.cs"));
 		spyFileSystem.Received().DeleteFile(Path.Combine(directory, "UnitTest1.cs"));
@@ -76,7 +76,7 @@ public partial class CreateXunit3ProjectCommandShould
 		spyFileSystem
 			.When(x => x.DeleteFile(Arg.Any<string>()))
 			.Do(x => throw new IOException());
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyFileSystem
 			.Received()
@@ -90,7 +90,7 @@ public partial class CreateXunit3ProjectCommandShould
 	void HaveNotDeletedExtraFileIfNonexistent()
 	{
 		spyFileSystem.Exists(Arg.Any<string>()).Returns(false);
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyFileSystem.Received().Exists(Path.Combine(directory, "UnitTest1.cs"));
 		spyFileSystem.DidNotReceive().DeleteFile(Path.Combine(directory, "UnitTest1.cs"));

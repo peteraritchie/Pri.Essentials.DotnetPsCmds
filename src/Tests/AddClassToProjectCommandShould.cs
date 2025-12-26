@@ -29,7 +29,7 @@ public partial class AddClassToProjectCommandShould
 	[Fact]
 	void HaveCorrectLanguageParameter()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
@@ -39,7 +39,7 @@ public partial class AddClassToProjectCommandShould
 	[Fact]
 	void HaveCorrectClassFilePath()
 	{
-		var result = sut.Execute();
+		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());
 		Assert.NotNull(suppliedCommandLine);
