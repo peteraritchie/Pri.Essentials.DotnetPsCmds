@@ -7,11 +7,14 @@ using Pri.Essentials.DotnetProjects.Commands;
 namespace Pri.Essentials.DotnetPsCmds;
 
 /// <summary>
-/// Represents a PowerShell cmdlet that adds a .NET project to an existing solution using the dotnet CLI.
+/// Represents a PowerShell cmdlet that adds a .NET project to an existing
+/// solution using the dotnet CLI.
 /// </summary>
-/// <remarks>This cmdlet supports ShouldProcess, enabling confirmation prompts and WhatIf support. Use this cmdlet
-/// to programmatically add a project to a solution file within automation scripts or interactive PowerShell sessions.
-/// The cmdlet writes the updated solution object to the output pipeline upon successful completion.</remarks>
+/// <remarks>This cmdlet supports ShouldProcess, enabling confirmation prompts
+/// and WhatIf support. Use this cmdlet to programmatically add a project to a
+/// solution file within automation scripts or interactive PowerShell sessions.
+/// The cmdlet writes the updated solution object to the output pipeline upon
+/// successful completion.</remarks>
 [Cmdlet(VerbsCommon.Add, nameof(DotnetProject), SupportsShouldProcess = true)]
 [OutputType(typeof(DotnetSolution))]
 // ReSharper disable once UnusedType.Global
@@ -69,7 +72,9 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		}
 	}
 
-	private CommandBase DetermineCommand(IShellExecutor executor, DotnetSolution solution, DotnetProject project)
+	private CommandBase DetermineCommand(IShellExecutor executor,
+		DotnetSolution solution,
+		DotnetProject project)
 	{
 		return new AddProjectToSolutionCommand(executor, solution, project);
 	}
