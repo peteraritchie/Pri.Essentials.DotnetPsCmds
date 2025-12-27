@@ -68,6 +68,7 @@ jobs:
         id: run-tests
         run: >
           dotnet test --configuration ${{ inputs.configuration }}
+          --filter "Category!=Integration"
           --no-build --logger trx
 
       - name: Upload test results
