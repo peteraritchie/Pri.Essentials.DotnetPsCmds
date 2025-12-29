@@ -75,13 +75,13 @@ jobs:
         if: >
           ${{ steps.run-tests.outcome != 'skipped' &&
             steps.run-tests.outcome != 'cancelled' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: "**/*.trx"
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.artifact-name }}
           path: "${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin"

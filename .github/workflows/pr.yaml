@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "${{ toJSON(github) }}" > debug.txt
       - name: Upload debug info
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: debug-info
           path: debug.txt
