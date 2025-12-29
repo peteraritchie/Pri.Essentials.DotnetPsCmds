@@ -8,6 +8,10 @@ indent_style = tab
 [*.xml]
 indent_size = 2
 
+[*.props, *.csproj]
+indent_size = 2
+indent_style = space
+
 # C# files
 [*.cs]
 
