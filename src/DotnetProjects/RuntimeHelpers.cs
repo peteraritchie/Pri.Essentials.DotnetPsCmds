@@ -6,6 +6,7 @@ namespace System.Runtime.CompilerServices;
 /// <summary>
 /// Copied here because GetSubArray isn't in netstandard but RuntimeHelpers is.
 /// </summary>
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class RuntimeHelpers
 {
 	/// <summary>
