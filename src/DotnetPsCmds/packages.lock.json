@@ -13,9 +13,9 @@
       },
       "PowerShellStandard.Library": {
         "type": "Direct",
-        "requested": "[5.1.0-preview-06, )",
-        "resolved": "5.1.0-preview-06",
-        "contentHash": "WU9kA2S4y0v2JOhHQoUmGB4Anv5l15coxf9UzjP+DBaqG+kuN6LCh7mtEjeDJJCP2IGlBquqVKCOCAb6KoI+CQ=="
+        "requested": "[5.1.1, )",
+        "resolved": "5.1.1",
+        "contentHash": "e31xJjG+Kjbv6YF3Yq6D4Dl3or8v7LrNF41k3CXrWozW6hR1zcOe5KYuZJaGSiAgLnwP8wcW+I3+IWEzMPZKXQ=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
