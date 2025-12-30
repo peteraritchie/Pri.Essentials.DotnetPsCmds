@@ -15,7 +15,8 @@ namespace Pri.Essentials.DotnetPsCmds;
 /// a solution file within automation scripts or interactive PowerShell
 /// sessions. The cmdlet writes the updated solution object to the output
 /// pipeline upon successful completion.</remarks>
-[Cmdlet(VerbsCommon.Add, "DotnetProjectReference", SupportsShouldProcess = true)]
+[Cmdlet(VerbsCommon.Add, "DotnetProjectReference",
+	SupportsShouldProcess = true)]
 [OutputType(typeof(DotnetSolution))]
 // ReSharper disable once UnusedType.Global
 public class AddDotnetProjectReferenceCmdlet : PSCmdlet
@@ -25,17 +26,17 @@ public class AddDotnetProjectReferenceCmdlet : PSCmdlet
 	/// </summary>
 	[Parameter(Mandatory = true,
 		Position = 0,
-		ValueFromPipeline = true,
-		HelpMessage = "What project to add the reference to.")]
-	public DotnetProject? TargetProject { get; set; }
+		HelpMessage = "What project to reference in the target project.")]
+	public DotnetProject? Project { get; set; }
 
 	/// <summary>
 	///
 	/// </summary>
 	[Parameter(Mandatory = true,
 		Position = 1,
-		HelpMessage = "What project to reference in the target project.")]
-	public DotnetProject? Project { get; set; }
+		ValueFromPipeline = true,
+		HelpMessage = "What project to add the reference to.")]
+	public DotnetProject? TargetProject { get; set; }
 
 	/// <inheritdoc />
 	protected override void BeginProcessing()
@@ -60,13 +61,27 @@ public class AddDotnetProjectReferenceCmdlet : PSCmdlet
 		var command = DetermineCommand(executor, TargetProject!, Project!);
 		if (ShouldProcess(command.Target, command.ActionName))
 		{
-			var r = command.Execute() as ShellOperationResult;
-
-			WriteDebug($"Exit code: {r!.ExitCode}");
-			WriteDebug($"Output:{Environment.NewLine}{r.OutputText}");
-			if (!string.IsNullOrWhiteSpace(r.ErrorText))
+			var addResult = command.Execute() as ShellOperationResult;
+			if (addResult!.IsFailure)
 			{
-				WriteDebug($"Error:{Environment.NewLine}{r.ErrorText}");
+				ThrowTerminatingError(new ErrorRecord(
+					new InvalidOperationException(
+						$"Failed to add reference to project. Exit code " +
+						$"{addResult.ExitCode}{Environment.NewLine}" +
+						$"Error output:" +
+						$"{Environment.NewLine}{addResult.ErrorText}"),
+					errorId: "AddProjectReferenceToProjectFailed",
+					errorCategory: ErrorCategory.OperationStopped,
+					targetObject: null));
+			}
+
+			WriteDebug($"Operation: {addResult!.OperationText}");
+			WriteDebug($"Exit code: {addResult.ExitCode}");
+			WriteDebug($"Output:{Environment.NewLine}{addResult.OutputText}");
+			if (!string.IsNullOrWhiteSpace(addResult.ErrorText))
+			{
+				WriteDebug(
+					$"Error:{Environment.NewLine}{addResult.ErrorText}");
 			}
 			WriteObject(TargetProject);
 		}

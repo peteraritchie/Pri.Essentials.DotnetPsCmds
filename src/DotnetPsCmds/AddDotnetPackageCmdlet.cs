@@ -7,30 +7,25 @@ using Pri.Essentials.DotnetProjects.Commands;
 namespace Pri.Essentials.DotnetPsCmds;
 
 /// <summary>
-/// Defines a cmdlet that adds a NuGet package reference to a .NET project within a solution.
+/// Defines a cmdlet that adds a NuGet package reference to a .NET project
+/// within a solution.
 /// </summary>
-/// <remarks>This cmdlet is intended for use in PowerShell scripts or interactive sessions to automate the process
-/// of adding package dependencies to .NET projects. The cmdlet supports confirmation prompts and can be used with
-/// PowerShell's ShouldProcess pattern for safe execution. The output is the updated project with the new package
-/// reference applied.</remarks>
+/// <remarks>
+/// This cmdlet is intended for use in PowerShell scripts or interactive
+/// sessions to automate the process of adding package dependencies to
+/// .NET projects. The cmdlet supports confirmation prompts and can be
+/// used with PowerShell's ShouldProcess pattern for safe execution.
+/// The output is the updated project with the new package reference applied.
+/// </remarks>
 [Cmdlet(VerbsCommon.Add, "DotnetPackage", SupportsShouldProcess = true)]
 [OutputType(typeof(DotnetProject))]
 public class AddDotnetPackageCmdlet : PSCmdlet
 {
 	/// <summary>
-	/// Gets or sets the project to add to the solution.
-	/// </summary>
-	[Parameter(Mandatory = true,
-		Position = 0,
-		ValueFromPipeline = true,
-		HelpMessage = "What project to add to the solution.")]
-	public DotnetProject? Project { get; set; }
-
-	/// <summary>
 	/// Gets or sets the identifier of the package to add to the project.
 	/// </summary>
 	[Parameter(Mandatory = true,
-		Position = 1,
+		Position = 0,
 		HelpMessage = "The package ID to add to the project.")]
 	public string? PackageId { get; set; }
 
@@ -38,9 +33,18 @@ public class AddDotnetPackageCmdlet : PSCmdlet
 	/// Gets or sets the version of the package to add to the project.
 	/// </summary>
 	[Parameter(Mandatory = false,
-		Position = 2,
+		Position = 1,
 		HelpMessage = "The package version to add to the project.")]
 	public string? PackageVersion { get; set; }
+
+	/// <summary>
+	/// Gets or sets the project to add to the solution.
+	/// </summary>
+	[Parameter(Mandatory = true,
+		Position = 2,
+		ValueFromPipeline = true,
+		HelpMessage = "What project to add to the solution.")]
+	public DotnetProject? Project { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether prerelease packages
@@ -82,25 +86,35 @@ public class AddDotnetPackageCmdlet : PSCmdlet
 			Prerelease ?? false);
 		if (ShouldProcess(command.Target, command.ActionName))
 		{
-			var r = command.Execute() as ShellOperationResult;
-			WriteDebug($"Exit code: {r!.ExitCode}");
-			WriteDebug($"Output:{Environment.NewLine}{r.OutputText}");
-			if (!string.IsNullOrWhiteSpace(r.ErrorText))
+			var addResult = command.Execute() as ShellOperationResult;
+			if (addResult!.IsFailure)
 			{
-				WriteError(new ErrorRecord(new Exception(r.ErrorText),
+				ThrowTerminatingError(new ErrorRecord(
+					new InvalidOperationException(
+						$"Failed to add package to project. Exit code " +
+						$"{addResult.ExitCode}{Environment.NewLine}" +
+						$"Error output:{Environment.NewLine}" +
+						$"{addResult.ErrorText}"),
+					errorId: "AddPackageToProjectFailed",
+					errorCategory: ErrorCategory.OperationStopped,
+					targetObject: null));
+			}
+			WriteDebug($"Operation: {addResult!.OperationText}");
+			WriteDebug($"Exit code: {addResult.ExitCode}");
+			WriteDebug($"Output:{Environment.NewLine}{addResult.OutputText}");
+			if (!string.IsNullOrWhiteSpace(addResult.ErrorText))
+			{
+				WriteError(new ErrorRecord(new Exception(addResult.ErrorText),
 					"AddPackageFailed",
 					ErrorCategory.NotSpecified,
 					Project));
 			}
-			else
-			{
-				WriteObject(Project);
-			}
 		}
+		WriteObject(Project);
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <param name="executor"></param>
 	/// <param name="project"></param>

@@ -27,5 +27,14 @@ public class DotnetProject : DotnetFile
 	/// </summary>
 	public override string FullPath => Path.Combine(Directory, Path.ChangeExtension(Name, ".csproj"));
 
+	/// <summary>
+	/// Gets or sets the .NET solution associated with this instance.
+	/// </summary>
+	/// <remarks>The original intention was to be able to use this
+	/// given a piped project to perform commands on the solution,
+	/// but cannot have multiple pipeline inputs in a cmdlet, so this might
+	/// be extraneous.
+	/// </remarks>
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
 	public DotnetSolution? Solution { get; set; }
 }
