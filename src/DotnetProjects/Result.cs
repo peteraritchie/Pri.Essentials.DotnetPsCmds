@@ -48,4 +48,11 @@ public record ShellOperationResult(int ExitCode, string OutputText, string Error
 	/// Gets the command-line that was executed.
 	/// </summary>
 	public string OperationText { get; init; } = string.Empty;
+
+	/// <summary>
+	/// <code>true</code> if the ExitCode is not 0, <code>false</code>
+	/// otherwise.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+	public bool IsFailure => ExitCode != 0;
 }

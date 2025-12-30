@@ -60,13 +60,28 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		var command = DetermineCommand(executor, Solution!, Project!);
 		if (ShouldProcess(command.Target, command.ActionName))
 		{
-			var r = command.Execute() as ShellOperationResult;
-
-			WriteDebug($"Exit code: {r!.ExitCode}");
-			WriteDebug($"Output:{Environment.NewLine}{r.OutputText}");
-			if (!string.IsNullOrWhiteSpace(r.ErrorText))
+			var addResult = command.Execute() as ShellOperationResult;
+			if (addResult!.IsFailure)
 			{
-				WriteDebug($"Error:{Environment.NewLine}{r.ErrorText}");
+				ThrowTerminatingError(new ErrorRecord(
+					new InvalidOperationException(
+						$"Failed to add project to solution. Exit code " +
+						$"{addResult.ExitCode}{Environment.NewLine}" +
+						$"Error output:" +
+						$"{Environment.NewLine}{addResult.ErrorText}"),
+					errorId: "AddProjectToSolutionFailed",
+					errorCategory: ErrorCategory.OperationStopped,
+					targetObject: null));
+			}
+
+			WriteDebug($"Operation: {addResult!.OperationText}");
+			WriteDebug($"Exit code: {addResult.ExitCode}");
+			WriteDebug(
+				$"Output:{Environment.NewLine}{addResult.OutputText}");
+			if (!string.IsNullOrWhiteSpace(addResult.ErrorText))
+			{
+				WriteDebug(
+					$"Error:{Environment.NewLine}{addResult.ErrorText}");
 			}
 			WriteObject(Solution);
 		}
