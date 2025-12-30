@@ -22,8 +22,12 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 	/// <inheritdoc />
 	public override Result Execute()
 	{
-		var result = shellExecutor.Execute(BuildCommandLine());
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
+		var commandLine = BuildCommandLine();
+		var result = shellExecutor.Execute(commandLine);
+		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		{
+			OperationText = commandLine
+		};
 	}
 
 	private string BuildCommandLine()

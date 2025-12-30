@@ -22,23 +22,23 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	/// <summary>
 	/// The parameter to the <code>dotnet new sln --template</code> option
 	/// </summary>
-	[Parameter(Mandatory = true,
-		Position = 0,
+	[Parameter(Mandatory = true, Position = 0,
 		HelpMessage = "What project template to use to generate the project.")]
 	[ValidateSet("xunit", "xunit3", "console", "classlib", "blazor", "worker", "webapi", "winforms")]
 	public string? TemplateName{ get; set; }
 
 	/// <summary>The parameter to the <code>dotnet new sln --output</code> option</summary>
-	[Parameter(Mandatory = false,
-		Position = 1,
+	[Parameter(Mandatory = false, Position = 1,
 		HelpMessage =
 			"What directory the project will be generated to. If omitted the current directory will be used.")]
+	[Alias("Path", "o")]
 	public string? OutputDirectory { get; set; }
 
 	/// <summary>The parameter to the <code>dotnet new sln --name</code> option</summary>
 	[Parameter(Mandatory = false,
 		Position = 2,
 		HelpMessage = "The name of the project file. If omitted, the parent directory name will be used.")]
+	[Alias("Name", "n")]
 	public string? OutputName{ get; set; }
 
 	/// <summary>The parameter to the <code>dotnet new sln --name</code> option</summary>
@@ -105,7 +105,6 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			var createResult = createCommand.Execute() as ShellOperationResult;
 			#endregion
 
-			// TODO: Error if exit code is non-zero?
 			if(createResult!.ExitCode != 0)
 			{
 				ThrowTerminatingError(errorRecord: new ErrorRecord(exception: new InvalidOperationException(
@@ -114,6 +113,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 					errorCategory: ErrorCategory.OperationStopped,
 					targetObject: null));
 			}
+			WriteDebug($"Operation: {createResult.OperationText}");
 			WriteDebug($"Exit code: {createResult.ExitCode}");
 			WriteDebug($"Output:{Environment.NewLine}{createResult.OutputText}");
 			if (!string.IsNullOrWhiteSpace(createResult.ErrorText))
@@ -135,6 +135,8 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 							errorCategory: ErrorCategory.OperationStopped,
 							targetObject: null));
 					}
+					createdProject.Solution = Solution;
+					WriteDebug($"Operation: {addResult.OperationText}");
 					WriteDebug($"Exit code: {addResult.ExitCode}");
 					WriteDebug($"Output:{Environment.NewLine}{addResult.OutputText}");
 					if (!string.IsNullOrWhiteSpace(addResult.ErrorText))

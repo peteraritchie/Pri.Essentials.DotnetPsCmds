@@ -40,7 +40,8 @@ public class CreateXunit3ProjectCommand(
 	/// <inheritdoc />
 	public override Result Execute()
 	{
-		var result = shellExecutor.Execute(BuildCommandLine());
+		var commandLine = BuildCommandLine();
+		var result = shellExecutor.Execute(commandLine);
 
 		if (fileSystem.Exists(Path.Combine(outputDirectory, "UnitTest1.cs")))
 		{
@@ -54,7 +55,10 @@ public class CreateXunit3ProjectCommand(
 				// deleted in between checking for existence.
 			}
 		}
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
+		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		{
+			OperationText = commandLine
+		};
 	}
 
 	/// <inheritdoc />
