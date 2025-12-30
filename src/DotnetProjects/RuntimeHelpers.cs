@@ -1,12 +1,16 @@
-﻿#pragma warning disable IDE0130 // Namespace does not match folder structure
+﻿// ReSharper disable UseCollectionExpression
+// ReSharper disable AssignNullToNotNullAttribute
+// ReSharper disable UnusedType.Global
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 // ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
+#pragma warning disable IDE0301 // Simplify collection initialization
 
 /// <summary>
 /// Copied here because GetSubArray isn't in netstandard but RuntimeHelpers is.
 /// </summary>
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class RuntimeHelpers
 {
 	/// <summary>

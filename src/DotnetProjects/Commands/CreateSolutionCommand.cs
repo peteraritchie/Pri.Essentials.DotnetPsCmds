@@ -13,21 +13,26 @@ public class CreateSolutionCommand(IShellExecutor shellExecutor, string outputDi
 {
 	/// <inheritdoc />
 	public override Result Execute()
-    {
-		var result = shellExecutor.Execute(BuildCommandLine());
-        return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
-    }
+	{
+		var commandLine = BuildCommandLine();
+		var result = shellExecutor.Execute(commandLine);
+		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		{
+			OperationText = commandLine
+		};
+	}
 
 	private string BuildCommandLine()
-    {
-        var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
-        var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
+	{
+		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
+		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
 
-        return $"dotnet new sln{outputDirectoryOption}{outputNameOption}";
-    }
+		return $"dotnet new sln{outputDirectoryOption}{outputNameOption}";
+	}
 
 	/// <inheritdoc />
 	public override string Target => Path.Combine(outputDirectory, outputName);
+
 	/// <inheritdoc />
 	public override string ActionName => "Create .NET solution file";
 }

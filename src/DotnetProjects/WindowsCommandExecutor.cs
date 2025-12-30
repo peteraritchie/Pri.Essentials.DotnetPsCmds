@@ -73,9 +73,9 @@ public sealed class WindowsShellExecutor : ShellExecutor
     }
 }
 
-/// <summary>
-/// A proxy to the Linux shell
-/// </summary>
+/// <summary> A proxy to the Linux shell </summary>
+/// <remarks>WIP</remarks>
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public class LinuxShellExecutor : ShellExecutor
 {
     /// <inheritdoc />

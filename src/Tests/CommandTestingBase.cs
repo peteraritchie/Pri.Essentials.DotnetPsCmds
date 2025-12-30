@@ -7,7 +7,7 @@ public abstract class CommandTestingBase<T>(IShellExecutor spyExecutor)
 	where T : CommandBase
 {
 	protected readonly IShellExecutor spyExecutor = spyExecutor;
-	protected readonly string directory = Environment.ExpandEnvironmentVariables(@"%TMP%\testing");
+	protected readonly string directory = Environment.ExpandEnvironmentVariables(@"%TMP%\MyProduct");
 	protected T? sut;
 	protected string? suppliedCommandLine;
 
@@ -23,4 +23,9 @@ public abstract class CommandTestingBase<T>(IShellExecutor spyExecutor)
 		Assert.NotNull(sut!.ActionName);
 	}
 
+	[Fact]
+	public void HaveNonNullTarget()
+	{
+		Assert.NotNull(sut!.Target);
+	}
 }

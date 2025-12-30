@@ -13,6 +13,7 @@ namespace Pri.Essentials.DotnetProjects;
 /// <remarks>This class is intended to centralize the association of project template types with their respective
 /// command creation logic. It enables consumers to retrieve a command factory for a given template, facilitating
 /// consistent project creation workflows. The class is static and cannot be instantiated.</remarks>
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public static class ProjectTemplateNameMapping
 {
 	/// <summary>

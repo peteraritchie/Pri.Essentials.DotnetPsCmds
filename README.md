@@ -34,6 +34,7 @@ $p1.AddClass("NS.OtherClass")
 ```
 
 testing add project to solution cmdlet
+
 ```powershell
 $p = new-dotnetproject xunit Dir Name net9.0;
 $s = new-dotnetsolution;
@@ -62,4 +63,79 @@ adding package reference to project
 $s = new-dotnetsolution;
 $p = $s.CreateProject("xunit3", "Dir", "Tests", "net10.0");
 $p.AddPackage("NSubstitute");
+```
+
+## Creating a solution
+
+Create a new solution in the current directory, using the name of the current
+directory for the name of the solution:
+
+```pwsh
+# dotnet new sln
+New-DotnetSolution;
+```
+
+Create a new solution in a specific directory, using the name of specific
+direction for the name of the solution (`dotnet new sln -o ./MyProduct`):
+```pwsh
+New-DotnetSolution MyProduct;
+```
+Or:
+```pwsh
+New-DotnetSolution -o MyProduct;
+```
+Or:
+```pwsh
+New-DotnetSolution -OutputDirectory MyProduct;
+```
+Or:
+```pwsh
+New-DotnetSolution -Path MyProduct;
+```
+
+Create a new solution in a specific directory, with a specific name of 
+the solution (`dotnet new sln -o ./MyProduct -n MySolution`):
+```pwsh
+New-DotnetSolution MyProduct MySolution;
+```
+Or:
+```pwsh
+New-DotnetSolution -OutputDirectory MyProduct -OutputName MySolution;
+```
+Or:
+```pwsh
+New-DotnetSolution -o MyProduct -n MySolution;
+```
+Or:
+```pwsh
+New-DotnetSolution -Path MyProduct -Name MySolution;
+```
+
+Create a new solution in the current directory and create a new class library
+project within the solution:
+```pwsh
+New-DotnetSolution | New-DotnetProject 'classlib'
+```
+```pwsh
+$s = New-DotnetSolution;
+$s | New-DotnetProject 'classlib';
+```
+Or:
+```pwsh
+New-DotnetSolution | New-DotnetProject -TemplateName 'classlib';
+```
+
+Equivalent to (in current directory `MyProduct`):
+```pwsh
+dotnet new sln;
+dotnet new classlib;
+dotnet sln add MyProduct.csproj --in-root;
+```
+
+Create a new solution in the current directory, create a new class library,
+and create a tests project in a Tests directory within the solution:
+```pwsh
+$s = New-DotnetSolution;
+$s | New-DotnetProject 'classlib';
+$s | New-DotnetProject 'xunit3' Tests;
 ```

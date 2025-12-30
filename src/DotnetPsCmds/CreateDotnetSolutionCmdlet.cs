@@ -16,11 +16,15 @@ namespace Pri.Essentials.DotnetPsCmds;
 public class CreateDotnetSolutionCmdlet : PSCmdlet
 {
 	/// <summary>The parameter to the <code>dotnet new sln --output</code> option</summary>
-	[Parameter(Mandatory = false)]
+	[Parameter(Mandatory = false, Position = 0,
+		HelpMessage = "What directory the project will be generated to. If omitted the current directory will be used.")]
+	[Alias("Path", "o")]
 	public string? OutputDirectory { get; set; }
 
 	/// <summary>The parameter to the <code>dotnet new sln --name</code> option</summary>
-	[Parameter(Mandatory = false)]
+	[Parameter(Mandatory = false, Position = 1,
+		HelpMessage = "The name of the project file. If omitted, the parent directory name will be used.")]
+	[Alias("Name", "n")]
 	public string? OutputName { get; set; }
 
 	/// <inheritdoc />
@@ -54,7 +58,8 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
 			var r = command.Execute() as ShellOperationResult;
 			#endregion
 
-			WriteDebug($"Exit code: {r!.ExitCode}");
+			WriteDebug($"Operation: {r!.OperationText}");
+			WriteDebug($"Exit code: {r.ExitCode}");
 			WriteDebug($"Output:{Environment.NewLine}{r.OutputText}");
 			if (!string.IsNullOrWhiteSpace(r.ErrorText))
 			{

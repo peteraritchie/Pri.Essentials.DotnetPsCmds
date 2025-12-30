@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Pri.Essentials.Abstractions;
 
@@ -84,20 +83,4 @@ public interface IFileSystem
 	/// <param name="path">The path to the file to be deleted. The path must refer to an existing file and cannot be null, empty, or contain
 	/// invalid characters.</param>
 	void DeleteFile(string path);
-}
-
-/// <summary>
-/// Extension members for IFileSystem
-/// </summary>
-public static class FileSystemExtensions
-{
-	private static readonly Lazy<IFileSystem> LazyFileSystem = new(() => new FileSystem());
-
-	extension(IFileSystem)
-	{
-		/// <summary>
-		/// A singleton instance of a default IFileSystem implementation
-		/// </summary>
-		public static IFileSystem Default => LazyFileSystem.Value;
-	}
 }

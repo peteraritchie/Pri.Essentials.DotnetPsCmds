@@ -33,21 +33,42 @@ public class CreateClassLibProjectCommand(
 	/// <inheritdoc />
 	public override Result Execute()
 	{
-		var result = shellExecutor.Execute(BuildCommandLine());
+		var commandLine = BuildCommandLine();
+		var result = shellExecutor.Execute(commandLine);
 
 		if (fileSystem.Exists(Path.Combine(outputDirectory, "Class1.cs")))
 		{
-			try
-			{
-				fileSystem.DeleteFile(Path.Combine(outputDirectory, "Class1.cs"));
-			}
-			catch (IOException)
-			{
-				// ignore if the file can't be deleted, it might have been
-				// deleted in between checking for existence.
-			}
+			TryDelete(Path.Combine(outputDirectory, "Class1.cs"));
 		}
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText);
+		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		{
+			OperationText = commandLine
+		};
+	}
+
+	/// <summary>
+	/// Attempts to delete the file at the specified path, ignoring any I/O
+	/// errors that occur during deletion.
+	/// </summary>
+	/// <remarks>
+	/// This wraps the untestable paranoid try/catch so that it can be
+	/// ignored with ExcludeFromCodeCoverageAttribute
+	/// </remarks>
+	/// <param name="path">
+	/// The path of the file to delete. Cannot be null or empty.
+	/// </param>
+	[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+	private void TryDelete(string path)
+	{
+		try
+		{
+			fileSystem.DeleteFile(path);
+		}
+		catch (IOException)
+		{
+			// ignore if the file can't be deleted, it might have been
+			// deleted in between checking for existence.
+		}
 	}
 
 	/// <inheritdoc />
