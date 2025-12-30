@@ -1,0 +1,134 @@
+﻿using System;
+using System.Management.Automation;
+
+using Pri.Essentials.DotnetProjects;
+using Pri.Essentials.DotnetProjects.Commands;
+
+namespace Pri.Essentials.DotnetPsCmds;
+
+/// <summary>
+/// Defines a cmdlet that adds a NuGet package reference to a .NET
+/// project within a solution.
+/// </summary>
+/// <remarks>
+/// This cmdlet is intended for use in PowerShell scripts or interactive
+/// sessions to automate the process of adding package dependencies to
+/// .NET projects. The cmdlet supports confirmation prompts and can be
+/// used with PowerShell's ShouldProcess pattern for safe execution.
+/// The output is the updated project with the new package reference applied.
+/// </remarks>
+[Cmdlet(VerbsCommon.Add, "DotnetPackages", SupportsShouldProcess = true)]
+[OutputType(typeof(DotnetProject))]
+public class AddDotnetPackagesCmdlet : PSCmdlet
+{
+	/// <summary>
+	/// Gets or sets the project to add to the solution.
+	/// </summary>
+	[Parameter(Mandatory = true,
+		Position = 1,
+		ValueFromPipeline = true,
+		HelpMessage = "What project to add to the solution.")]
+	public DotnetProject? Project { get; set; }
+
+	/// <summary>
+	/// Gets or sets the identifier of the package to add to the project.
+	/// </summary>
+	[Parameter(Mandatory = true,
+		Position = 0,
+		HelpMessage = "The package ID to add to the project.")]
+	public string[]? PackageIds { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether prerelease packages
+	/// are allowed to be installed.
+	/// </summary>
+	/// <remarks>If set to <see langword="true"/>, prerelease versions of
+	/// packages may be included during installation.
+	/// If <see langword="false"/>, only stable package versions are
+	/// considered.
+	/// If <see langword="null"/>,
+	/// the default behavior is used.</remarks>
+	[Parameter(Mandatory = false,
+		Position = 2,
+		HelpMessage = "Allows prerelease packages to be installed..")]
+	public bool? Prerelease { get; set; }
+
+	/// <inheritdoc />
+	protected override void BeginProcessing()
+	{
+		if(PackageIds == null || PackageIds.Length == 0)
+		{
+			throw new PSArgumentNullException(nameof(PackageIds));
+		}
+
+		base.BeginProcessing();
+	}
+
+	/// <inheritdoc />
+	protected override void ProcessRecord()
+	{
+		if (Project == null)
+		{
+			throw new PSArgumentNullException(nameof(Project));
+		}
+
+		foreach (var packageId in PackageIds!)
+		{
+			var executor = ShellExecutor.Instance;
+			var command = DetermineCommand(executor,
+				Project!,
+				packageId,
+				Prerelease ?? false);
+			if (ShouldProcess(command.Target, command.ActionName))
+			{
+				var addResult = command.Execute() as ShellOperationResult;
+				if (addResult!.IsFailure)
+				{
+					ThrowTerminatingError(new ErrorRecord(
+						new InvalidOperationException(
+							$"Failed to add package to project. Exit code " +
+							$"{addResult.ExitCode}{Environment.NewLine}" +
+							$"Error output:" +
+							$"{Environment.NewLine}{addResult.ErrorText}"),
+						errorId: "AddPackageToProjectFailed",
+						errorCategory: ErrorCategory.OperationStopped,
+						targetObject: null));
+				}
+				WriteDebug($"Operation: {addResult!.OperationText}");
+				WriteDebug($"Exit code: {addResult.ExitCode}");
+				WriteDebug($"Output:{Environment.NewLine}"
+					+ $"{addResult.OutputText}");
+				if (!string.IsNullOrWhiteSpace(addResult.ErrorText))
+				{
+					WriteError(new ErrorRecord(
+						new Exception(addResult.ErrorText),
+						"AddPackageFailed",
+						ErrorCategory.NotSpecified,
+						Project));
+				}
+			}
+		}
+		WriteObject(Project);
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	/// <param name="executor"></param>
+	/// <param name="project"></param>
+	/// <param name="packageId"></param>
+	/// <param name="isPrerelease"></param>
+	/// <returns></returns>
+	private static CommandBase DetermineCommand(IShellExecutor executor,
+		DotnetProject project,
+		string packageId,
+		bool isPrerelease)
+	{
+		return new AddPackageReferenceToProjectCommand(executor,
+			project,
+			packageId)
+		{
+			IsPrerelease = isPrerelease
+		};
+	}
+}
