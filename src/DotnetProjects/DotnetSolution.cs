@@ -27,25 +27,15 @@ public class DotnetSolution : DotnetFile
 	/// </param>
 	public DotnetSolution(string? directory, string? name) : base(directory, name)
 	{
-	}
-
-	/// <summary>
-	/// Initializes a new instance of the DotnetSolution class for the
-	/// specified solution file path.
-	/// </summary>
-	/// <param name="path">
-	/// The full file system path to the .NET solution
-	/// file. Cannot be null or empty.
-	/// </param>
-	public DotnetSolution(string path) : base(path)
-	{
+		// TODO: handle slnx
+		FullPath = Path.GetExtension(Name) == ".sln"
+			? Path.Combine(Directory, Name)
+			: Path.Combine(Directory, Name + ".sln");
 	}
 
 	/// <summary>
 	/// Gets the full file system path to the solution file, including the
 	/// ".sln" extension.
 	/// </summary>
-	public override string FullPath => Path.Combine(Directory,
-		Path.ChangeExtension(Name,
-			".sln"));
+	public override string FullPath { get; }
 }

@@ -20,12 +20,14 @@ public class DotnetProject : DotnetFile
 	/// <param name="name">The name of the project. Can be null if the project name should be inferred.</param>
 	public DotnetProject(string? directory, string? name) : base(directory, name)
 	{
+		// TODO: handle different types of project besides CS
+		FullPath = Path.GetExtension(Name) == ".csproj"
+			? Path.Combine(Directory, Name)
+			: Path.Combine(Directory, Name + ".csproj");
 	}
 
-	/// <summary>
-	/// TODO: handle different types of project besides CS
-	/// </summary>
-	public override string FullPath => Path.Combine(Directory, Path.ChangeExtension(Name, ".csproj"));
+	/// <inheritdoc />
+	public override string FullPath { get; }
 
 	/// <summary>
 	/// Gets or sets the .NET solution associated with this instance.

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Pri.Essentials.DotnetProjects;
 
@@ -25,22 +24,6 @@ public abstract class DotnetFile
 	{
 		Directory = directory ?? System.IO.Directory.GetCurrentDirectory();
 		Name = name ?? Path.GetFileName(Directory);
-	}
-
-	/// <summary>
-	/// Initializes a new instance of the DotnetFile class for the specified
-	/// file path.
-	/// </summary>
-	/// <param name="path">
-	/// The full file system path to the file. Cannot be null, empty,
-	/// or consist only of white-space characters.
-	/// </param>
-	protected DotnetFile(string path)
-	{
-		ArgumentException.ThrowIfNullOrWhiteSpace(path);
-
-		Directory = Path.GetDirectoryName(path)!;
-		Name = Path.GetFileNameWithoutExtension(path);
 	}
 
 	/// <summary>
