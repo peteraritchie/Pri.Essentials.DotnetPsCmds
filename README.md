@@ -170,6 +170,14 @@ New-DotnetProject 'xunit3' Tests | Add-DotnetPackages -PackageId "NSubstitute";
 ```
 
 ### Create a project and add multiple NuGet package reference
+
 ```pwsh
-New-DotnetProject 'xunit3' Tests | Add-DotnetPackages 'NSubstitute', 'FluentAssertions';
+New-DotnetProject 'xunit3' MyLibrary.Tests | Add-DotnetPackages 'NSubstitute', 'FluentAssertions';
+```
+
+Equivalent to:
+```pwsh
+dotnet new xunit3 -o MyLibrary.Tests
+dotnet add Tests package NSubstitute
+dotnet add Tests package FluentAssertions
 ```

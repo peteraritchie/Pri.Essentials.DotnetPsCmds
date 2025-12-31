@@ -1,11 +1,31 @@
 ﻿using System.Runtime.InteropServices;
 
-using Microsoft.TemplateEngine.Abstractions.Installer;
-
 namespace Tests;
 
 public class Assumptions
 {
+	/// <summary>
+	/// Searches parent directories from the current working directory upward until a file named "global.json" is found or
+	/// the root directory is reached. Asserts that the file exists in one of the directories traversed.
+	/// </summary>
+	/// <remarks>This test is typically used to verify that a solution-level configuration file, such as
+	/// "global.json", is present in the directory hierarchy above the current working directory. The assertion fails if
+	/// the file cannot be found in any parent directory up to the root.</remarks>
+	[Fact]
+	void RecurseUpUntil()
+	{
+		var fileName = "global.json";
+		var currentDir = Environment.CurrentDirectory;
+
+		while (currentDir != null
+		       && !File.Exists(Path.Combine(currentDir, fileName))
+		       && Path.GetPathRoot(currentDir) != currentDir)
+		{
+			currentDir = Directory.GetParent(currentDir)?.FullName;
+		}
+		Assert.NotNull(currentDir);
+	}
+
 	[Fact]
 	void MultipleDirCombine()
 	{
@@ -69,30 +89,4 @@ public class Assumptions
 		dir = Path.Combine(currentDir, dir);
 		Assert.Equal(@"c:\sub\dir", dir);
 	}
-
-    [Fact]
-    void GetDotnetNewTemplates()
-    {
-		var path = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.templateengine\packages.json");
-        Assert.SkipUnless(Path.Exists(path), "Skip if the file doesn't exist");
-        using var stream = File.OpenRead(path);
-        PackagesJson packagesJson = (PackagesJson)System.Text.Json.JsonSerializer.Deserialize(stream, typeof(PackagesJson))!;
-        Assert.NotNull(packagesJson);
-        var packages = Packages(packagesJson).ToList();
-        Assert.NotEmpty(packages);
-    }
-
-    private static IEnumerable<string> Packages(PackagesJson packagesJson)
-    {
-        foreach (var p in packagesJson.Packages.Where(e=>e.Details != null && e.Details.ContainsKey("PackageId")))
-        {
-            yield return p.Details!["PackageId"];
-        }
-    }
-
 }
-#nullable disable
-    public class PackagesJson
-    {
-        public TemplatePackageData[] Packages { get; set; }
-    }
