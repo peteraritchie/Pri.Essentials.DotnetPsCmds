@@ -7,4 +7,5 @@ public static class ProjectElementNames
 
 	public const string RestorePackagesWithLockFile
 		= "RestorePackagesWithLockFile";
+	public const string GenerateDocumentationFile = "GenerateDocumentationFile";
 }
