@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Linq;
-using System.Xml.XPath;
 
 using Tests;
 
@@ -45,6 +44,45 @@ public static class VisualStudioProjectConfigurationService
 		if (TrySetProjectOption(propertyGroupElement,
 			    ProjectElementNames.RestorePackagesWithLockFile,
 			    true))
+		{
+			// Reset stream before saving
+			fs.SetLength(0);
+			fs.Position = 0;
+			doc.Save(fs);
+		}
+	}
+
+	/// <summary>
+	/// Enables the generation of XML documentation file output for the
+	/// specified project file stream.
+	/// </summary>
+	/// <param name="stream">
+	/// The stream representing the project file to update. The stream must be
+	/// writable and positioned at the start of the project file content.
+	/// </param>
+	public static void EnableGenerateDocumentationFile(Stream stream)
+	{
+		SetGenerateDocumentationFile(stream, true);
+	}
+
+	private static void SetGenerateDocumentationFile(Stream fs, bool enable)
+	{
+		var doc = XDocument.Load(fs);
+		var projectElement = doc.Root!;
+		if (projectElement.Name != ProjectElementNames.Project)
+		{
+			throw new InvalidOperationException(
+				"Root element must be <Project>.");
+		}
+
+		var propertyGroupElement
+			= projectElement.Element(ProjectElementNames.PropertyGroup) ??
+			  throw new InvalidOperationException(
+				  "No <PropertyGroup> element found in project file.");
+
+		if (TrySetProjectOption(propertyGroupElement,
+			    ProjectElementNames.GenerateDocumentationFile,
+			    enable))
 		{
 			// Reset stream before saving
 			fs.SetLength(0);

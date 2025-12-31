@@ -69,6 +69,11 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	// ReSharper disable once UnusedAutoPropertyAccessor.Global
 	public DotnetSolution? Solution { get; set; }
 
+	[Parameter(Mandatory = false,
+		HelpMessage = "Switch parameter to indicate whether to "
+		+ "generate documentation file.")]
+	public SwitchParameter ShouldGenerateDocumentationFile { get; set; }
+
 	/// <inheritdoc />
 	protected override void BeginProcessing()
 	{
@@ -201,11 +206,18 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			frameworkName ?? SupportedFrameworkName.Net10);
 	}
 
-	private static CommandBase DetermineAddCommand(IShellExecutor executor,
+	private CommandBase DetermineAddCommand(IShellExecutor executor,
 		DotnetSolution solution,
 		DotnetProject project)
 	{
-		return new AddProjectToSolutionCommand(executor, solution, project);
+		return new AddProjectToSolutionCommand(executor, solution, project)
+		{
+			ShouldGenerateDocumentationFile
+				= ShouldGenerateDocumentationFile.IsPresent
+					? ShouldGenerateDocumentationFile
+					: null
+			// TODO: other options?
+		};
 	}
 
 

@@ -1,4 +1,6 @@
-﻿namespace Pri.Essentials.DotnetProjects.Commands;
+﻿using System.IO;
+
+namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
 /// WIP
@@ -24,6 +26,18 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 	{
 		var commandLine = BuildCommandLine();
 		var result = shellExecutor.Execute(commandLine);
+		if (result.IsSuccess)
+		{
+			// Update file options
+			if (ShouldGenerateDocumentationFile is not null && ShouldGenerateDocumentationFile == true)
+			{
+				using FileStream fs = new(project.FullPath,
+					FileMode.Open,
+					FileAccess.ReadWrite,
+					FileShare.None);
+				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(fs);
+			}
+		}
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
 		{
 			OperationText = commandLine
@@ -35,4 +49,6 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 		var otherOptions = " --in-root"; // Avoid create solution folders for each project.
 		return $"dotnet sln {solution.FullPath} add {project.FullPath}{otherOptions}";
 	}
+
+	public bool? ShouldGenerateDocumentationFile { get; init; }
 }
