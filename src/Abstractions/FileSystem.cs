@@ -30,6 +30,18 @@ internal class FileSystem : IFileSystem
 	{
 		File.Delete(path);
 	}
+
+	/// <inheritdoc />
+	public Stream FileOpen(string path,
+		FileMode fileMode,
+		FileAccess fileAccess,
+		FileShare fileShare)
+	{
+		return File.Open(path,
+			FileMode.Open,
+			FileAccess.ReadWrite,
+			FileShare.None);
+	}
 }
 
 /// <summary>
@@ -78,9 +90,25 @@ public interface IFileSystem
 	/// <summary>
 	/// Deletes the specified file from the file system.
 	/// </summary>
-	/// <remarks>If the file does not exist, no exception is thrown. This method does not delete directories.
-	/// Relative paths are interpreted relative to the current working directory.</remarks>
-	/// <param name="path">The path to the file to be deleted. The path must refer to an existing file and cannot be null, empty, or contain
-	/// invalid characters.</param>
+	/// <remarks>
+	/// If the file does not exist, no exception is thrown. This method does
+	/// not delete directories. Relative paths are interpreted relative to
+	/// the current working directory.
+	/// </remarks>
+	/// <param name="path">
+	/// The path to the file to be deleted. The path must refer to an
+	/// existing file and cannot be null, empty, or contain invalid characters.
+	/// </param>
 	void DeleteFile(string path);
+
+	/// <summary>
+	/// Opens a file stream for the specified file with the given mode,
+	/// access, and sharing options.
+	/// </summary>
+	/// <param name="path"></param>
+	/// <param name="fileMode"></param>
+	/// <param name="fileAccess"></param>
+	/// <param name="fileShare"></param>
+	/// <returns></returns>
+	Stream FileOpen(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare);
 }

@@ -14,7 +14,8 @@ namespace Pri.Essentials.DotnetPsCmds;
 /// <param type="synopsis">Creates a new .NET project.</param>
 /// <param type="description">Creates a new .NET project.</param>
 /// </summary>
-[Cmdlet(VerbsCommon.New, "DotnetProject", SupportsShouldProcess = true)]
+[Cmdlet(VerbsCommon.New, "DotnetProject", SupportsShouldProcess = true,
+	DefaultParameterSetName = "WithoutSolution")]
 [OutputType(typeof(DotnetProject))]
 // ReSharper disable once UnusedType.Global
 public class CreateDotnetProjectCmdlet : PSCmdlet
@@ -52,6 +53,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	/// <summary>
 	/// The parameter to the <code>dotnet new sln --name</code> option
 	/// </summary>
+	/// <remarks>TODO: set default based on global.json if present</remarks>
 	[Parameter(Mandatory = false,
 		Position = 3,
 		HelpMessage = "Which .NET framework version to use. If omitted, "
@@ -66,9 +68,23 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		Position = 4,
 		ValueFromPipeline = true,
 		HelpMessage = "What solution to add the project to.")]
+	[Parameter(Mandatory = true, ParameterSetName = "WithSolution",
+		Position = 4,
+		ValueFromPipeline = true)]
 	// ReSharper disable once UnusedAutoPropertyAccessor.Global
 	public DotnetSolution? Solution { get; set; }
 
+	/// <summary>
+	/// Gets or sets the solution folder to which the project will be added.
+	/// </summary>
+	[Parameter(Mandatory = false, ParameterSetName = "WithSolution",
+		HelpMessage = "What solution folder to add the project to.")]
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
+	public string? SolutionFolder { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether to generate XML documentation
+	/// </summary>
 	[Parameter(Mandatory = false,
 		HelpMessage = "Switch parameter to indicate whether to "
 		+ "generate documentation file.")]
@@ -122,6 +138,20 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	/// <inheritdoc />
 	protected override void ProcessRecord()
 	{
+		if (this.ParameterSetName == "WithSolution"
+			&& Solution == null)
+		{
+			ThrowTerminatingError(
+				new ErrorRecord(
+					new ArgumentException(
+						$"Parameter Solution is required "
+						+ $"when using parameter set '{this.ParameterSetName}'",
+					nameof(Solution)),
+				errorId: "Missing Solution Parameter",
+				errorCategory: ErrorCategory.InvalidArgument,
+				targetObject: null));
+		}
+
 		var executor = ShellExecutor.Instance;
 		Debug.Assert(supportedTemplateName != null);
 		var createCommand = DetermineCreateCommand(executor,
@@ -161,7 +191,9 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			{
 				var addCommand = DetermineAddCommand(executor,
 					Solution,
-					createdProject);
+					createdProject,
+					ShouldGenerateDocumentationFile,
+					SolutionFolder);
 				if (ShouldProcess(addCommand.Target, addCommand.ActionName))
 				{
 					var addResult = addCommand.Execute()
@@ -206,15 +238,20 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			frameworkName ?? SupportedFrameworkName.Net10);
 	}
 
-	private CommandBase DetermineAddCommand(IShellExecutor executor,
+	private static CommandBase DetermineAddCommand(IShellExecutor executor,
 		DotnetSolution solution,
-		DotnetProject project)
+		DotnetProject project,
+		SwitchParameter shouldGenerateDocumentationFile,
+		string? solutionFolder)
 	{
-		return new AddProjectToSolutionCommand(executor, solution, project)
+		return new AddProjectToSolutionCommand(executor,
+			solution,
+			project,
+			solutionFolder)
 		{
 			ShouldGenerateDocumentationFile
-				= ShouldGenerateDocumentationFile.IsPresent
-					? ShouldGenerateDocumentationFile
+				= shouldGenerateDocumentationFile.IsPresent
+					? shouldGenerateDocumentationFile
 					: null
 			// TODO: other options?
 		};

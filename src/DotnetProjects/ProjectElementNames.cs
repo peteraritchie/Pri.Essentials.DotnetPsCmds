@@ -1,4 +1,4 @@
-﻿namespace Tests;
+﻿namespace Pri.Essentials.DotnetProjects;
 
 public static class ProjectElementNames
 {

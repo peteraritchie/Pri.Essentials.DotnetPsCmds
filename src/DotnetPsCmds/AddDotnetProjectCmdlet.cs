@@ -37,6 +37,14 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		HelpMessage = "What project to add to the solution.")]
 	public DotnetProject? Project { get; set; }
 
+	/// <summary>
+	/// Gets or sets the solution folder to which the project will be added.
+	/// </summary>
+	[Parameter(Mandatory = false,
+		HelpMessage = "What solution folder to add the project to.")]
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
+	public string? SolutionFolder { get; set; }
+
 	/// <inheritdoc />
 	protected override void BeginProcessing()
 	{
@@ -57,7 +65,10 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		}
 
 		var executor = ShellExecutor.Instance;
-		var command = DetermineCommand(executor, Solution!, Project!);
+		var command = DetermineCommand(executor,
+			Solution!,
+			Project!,
+			SolutionFolder);
 		if (ShouldProcess(command.Target, command.ActionName))
 		{
 			var addResult = command.Execute() as ShellOperationResult;
@@ -87,11 +98,15 @@ public class AddDotnetProjectCmdlet : PSCmdlet
 		}
 	}
 
-	private CommandBase DetermineCommand(IShellExecutor executor,
+	private static CommandBase DetermineCommand(IShellExecutor executor,
 		DotnetSolution solution,
-		DotnetProject project)
+		DotnetProject project,
+		string? solutionFolder)
 	{
-		return new AddProjectToSolutionCommand(executor, solution, project);
+		return new AddProjectToSolutionCommand(executor,
+			solution,
+			project,
+			solutionFolder: solutionFolder);
 	}
 
 	/// <inheritdoc />
