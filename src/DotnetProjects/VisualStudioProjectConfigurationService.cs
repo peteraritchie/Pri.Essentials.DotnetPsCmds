@@ -2,8 +2,6 @@
 using System.IO;
 using System.Xml.Linq;
 
-using Tests;
-
 namespace Pri.Essentials.DotnetProjects;
 
 /// <summary>

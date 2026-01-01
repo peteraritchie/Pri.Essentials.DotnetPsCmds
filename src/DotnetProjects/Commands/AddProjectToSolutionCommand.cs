@@ -1,5 +1,7 @@
 ﻿using System.IO;
 
+using Pri.Essentials.Abstractions;
+
 namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
@@ -12,9 +14,17 @@ namespace Pri.Essentials.DotnetProjects.Commands;
 /// <param name="shellExecutor"></param>
 /// <param name="solution"></param>
 /// <param name="project"></param>
-public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSolution solution, DotnetProject project)
+/// <param name="solutionFolder"></param>
+/// <param name="fileSystem"></param>
+public class AddProjectToSolutionCommand(
+	IShellExecutor shellExecutor,
+	DotnetSolution solution,
+	DotnetProject project,
+	string? solutionFolder,
+	IFileSystem? fileSystem = null)
 	: CommandBase(shellExecutor)
 {
+	private readonly IFileSystem fileSystem = fileSystem ?? IFileSystem.Default;
 	/// <inheritdoc />
 	public override string Target => solution.FullPath;
 
@@ -31,7 +41,7 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 			// Update file options
 			if (ShouldGenerateDocumentationFile is not null && ShouldGenerateDocumentationFile == true)
 			{
-				using FileStream fs = new(project.FullPath,
+				using Stream fs = fileSystem.FileOpen(project.FullPath,
 					FileMode.Open,
 					FileAccess.ReadWrite,
 					FileShare.None);
@@ -46,9 +56,15 @@ public class AddProjectToSolutionCommand(IShellExecutor shellExecutor, DotnetSol
 
 	private string BuildCommandLine()
 	{
-		var otherOptions = " --in-root"; // Avoid create solution folders for each project.
+		string otherOptions = string.IsNullOrWhiteSpace(solutionFolder)
+			? " --in-root" // Avoid create solution folders for each project.
+			: $" --solution-folder \"{solutionFolder}\"";
+
 		return $"dotnet sln {solution.FullPath} add {project.FullPath}{otherOptions}";
 	}
 
+	/// <summary>
+	/// Gets or sets whether to generate the xml doc file
+	/// </summary>
 	public bool? ShouldGenerateDocumentationFile { get; init; }
 }

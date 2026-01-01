@@ -1,14 +1,16 @@
 ﻿using System.Text.RegularExpressions;
 
+using Pri.Essentials.Abstractions;
 using Pri.Essentials.DotnetProjects;
 using Pri.Essentials.DotnetProjects.Commands;
 
 namespace Tests;
 
-public partial class AddProjectToSolutionCommandShould
+public partial class AddProjectToSolutionCommandWithShouldGenerateDocumentationFileShould
 	: CommandTestingBase<AddProjectToSolutionCommand>
 {
-	public AddProjectToSolutionCommandShould()
+	private readonly IFileSystem spyFileSystem = Substitute.For<IFileSystem>();
+	public AddProjectToSolutionCommandWithShouldGenerateDocumentationFileShould()
 		: base(Substitute.For<IShellExecutor>())
 	{
 		spyExecutor
@@ -18,10 +20,31 @@ public partial class AddProjectToSolutionCommandShould
 		var fakeProject = new DotnetProject(
 			Path.Combine(directory, "testing"),
 			name: "testing");
+		var memoryStream = new MemoryStream();
+		memoryStream.Write("""
+		                   <Project Sdk="Microsoft.NET.Sdk">
+		                     <PropertyGroup>
+		                       <TargetFramework>netstandard2.0</TargetFramework>
+		                       <LangVersion>latest</LangVersion>
+		                       <Nullable>enable</Nullable>
+		                     </PropertyGroup>
+		                   </Project>
+		                   """u8.ToArray());
+		memoryStream.Position = 0;
+
+		spyFileSystem.FileOpen(path: Arg.Any<string>(),
+				fileMode: Arg.Any<FileMode>(),
+				fileAccess: Arg.Any<FileAccess>(),
+				fileShare: Arg.Any<FileShare>())
+			.Returns(memoryStream);
 		sut = new AddProjectToSolutionCommand(spyExecutor,
 			fakeSolution,
 			fakeProject,
-			solutionFolder: null);
+			solutionFolder: null,
+			fileSystem: spyFileSystem)
+		{
+			ShouldGenerateDocumentationFile = true
+		};
 	}
 
 	[Fact]

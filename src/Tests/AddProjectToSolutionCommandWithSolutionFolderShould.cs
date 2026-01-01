@@ -5,10 +5,10 @@ using Pri.Essentials.DotnetProjects.Commands;
 
 namespace Tests;
 
-public partial class AddProjectToSolutionCommandShould
+public partial class AddProjectToSolutionCommandWithSolutionFolderShould
 	: CommandTestingBase<AddProjectToSolutionCommand>
 {
-	public AddProjectToSolutionCommandShould()
+	public AddProjectToSolutionCommandWithSolutionFolderShould()
 		: base(Substitute.For<IShellExecutor>())
 	{
 		spyExecutor
@@ -21,7 +21,7 @@ public partial class AddProjectToSolutionCommandShould
 		sut = new AddProjectToSolutionCommand(spyExecutor,
 			fakeSolution,
 			fakeProject,
-			solutionFolder: null);
+			solutionFolder: "Tests");
 	}
 
 	[Fact]
@@ -35,6 +35,8 @@ public partial class AddProjectToSolutionCommandShould
 		Assert.True(match.Success);
 		Assert.Equal("dotnet sln",  match.Groups[1].Value);
 		Assert.Equal("add",  match.Groups[3].Value);
+		Assert.Equal("--solution-folder",  match.Groups[5].Value);
+		Assert.Equal("\"Tests\"",  match.Groups[6].Value);
 	}
 
 	[Fact]
@@ -50,6 +52,6 @@ public partial class AddProjectToSolutionCommandShould
 		Assert.Equal(Path.Combine(directory, "testing", "testing.csproj"),  match.Groups[4].Value);
 	}
 
-	[GeneratedRegex(@"^(\S+ \S+) (\S+) (\S+) (\S+) --in-root$")]
+	[GeneratedRegex(@"^(\S+ \S+) (\S+) (\S+) (\S+) (\S+) (\S+)$")]
 	private static partial Regex GroupNameAndDirRegex();
 }
