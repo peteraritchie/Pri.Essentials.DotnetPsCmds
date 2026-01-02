@@ -1,5 +1,5 @@
 ---
-name: Reusable .NET Build & Verify Tests Pass
+name: Reusable .NET Build & Verify Tests Pass - PowerShell Cmdlet Module
 
 on:  # yamllint disable-line rule:truthy
   workflow_call:
@@ -64,14 +64,14 @@ jobs:
         run: |
           dotnet build --configuration ${{ inputs.configuration }} --no-restore
 
-      - name: Run tests
+      - name: Run Xunit tests
         id: run-tests
         run: >
           dotnet test --configuration ${{ inputs.configuration }}
           --filter "Category!=Integration"
           --no-build --logger trx
 
-      - name: Upload test results
+      - name: Upload Xunit test results
         if: >
           ${{ steps.run-tests.outcome != 'skipped' &&
             steps.run-tests.outcome != 'cancelled' }}
@@ -79,6 +79,23 @@ jobs:
         with:
           name: test-results
           path: "**/*.trx"
+
+      - name: Run Pester Tests
+        id: run-pester-tests
+        shell: pwsh
+        run: |
+          cd ${{ inputs.source-directory }}/Tests/Pester;
+          Import-Module Pester;
+          Invoke-Pester -OutputFile pester-results.xml;
+
+      - name: Upload Pester test results
+        if: >
+          ${{ steps.run-pester-tests.outcome != 'skipped' &&
+            steps.run-pester-tests.outcome != 'cancelled' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: pester-test-results
+          path: "**/pester-results.xml"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v6

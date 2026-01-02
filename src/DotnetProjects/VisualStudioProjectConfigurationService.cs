@@ -7,6 +7,11 @@ namespace Pri.Essentials.DotnetProjects;
 /// <summary>
 /// Provides services for configuring Visual Studio project files.
 /// </summary>
+/// <remarks>
+/// This service assumes that options are applied unconditionally in the
+/// project file; that is, they are applied to a singe unattributed
+/// ProgramGroup element in the root (&lt;Project&gt;) element.
+/// </remarks>
 public static class VisualStudioProjectConfigurationService
 {
 	/// <summary>
@@ -21,12 +26,26 @@ public static class VisualStudioProjectConfigurationService
 			FileMode.Open,
 			FileAccess.ReadWrite,
 			FileShare.None);
-		SetRestorePackagesWithLockFile(fs);
+		SetRestorePackagesWithLockFile(fs, true);
 	}
 
-	private static void SetRestorePackagesWithLockFile(Stream fs)
+	/// <summary>
+	/// Adds the RestorePackagesWithLockFile property if it doesn't exist,
+	/// and sets it to true
+	/// </summary>
+	/// <param name="stream">
+	/// The stream representing the project file to update. The stream must be
+	/// writable and positioned at the start of the project file content.
+	/// </param>
+	/// <exception cref="InvalidOperationException"></exception>
+	public static void EnableRestorePackagesWithLockFile(Stream stream)
 	{
-		var doc = XDocument.Load(fs);
+		SetRestorePackagesWithLockFile(stream, true);
+	}
+
+	private static void SetRestorePackagesWithLockFile(Stream stream, bool enable)
+	{
+		var doc = XDocument.Load(stream);
 		var projectElement = doc.Root!;
 		if (projectElement.Name != ProjectElementNames.Project)
 		{
@@ -41,12 +60,11 @@ public static class VisualStudioProjectConfigurationService
 
 		if (TrySetProjectOption(propertyGroupElement,
 			    ProjectElementNames.RestorePackagesWithLockFile,
-			    true))
+			    enable ? "true" : "false"))
 		{
-			// Reset stream before saving
-			fs.SetLength(0);
-			fs.Position = 0;
-			doc.Save(fs);
+			// Reset position before saving
+			stream.Position = 0;
+			doc.Save(stream);
 		}
 	}
 
@@ -63,9 +81,9 @@ public static class VisualStudioProjectConfigurationService
 		SetGenerateDocumentationFile(stream, true);
 	}
 
-	private static void SetGenerateDocumentationFile(Stream fs, bool enable)
+	private static void SetGenerateDocumentationFile(Stream stream, bool enable)
 	{
-		var doc = XDocument.Load(fs);
+		var doc = XDocument.Load(stream);
 		var projectElement = doc.Root!;
 		if (projectElement.Name != ProjectElementNames.Project)
 		{
@@ -80,18 +98,17 @@ public static class VisualStudioProjectConfigurationService
 
 		if (TrySetProjectOption(propertyGroupElement,
 			    ProjectElementNames.GenerateDocumentationFile,
-			    enable))
+			    enable ? "true" : "false"))
 		{
-			// Reset stream before saving
-			fs.SetLength(0);
-			fs.Position = 0;
-			doc.Save(fs);
+			// Reset position before saving
+			stream.Position = 0;
+			doc.Save(stream);
 		}
 	}
 
-	private static bool TrySetProjectOption<T>(XElement propertyGroupElement,
+	private static bool TrySetProjectOption(XElement propertyGroupElement,
 		string optionName,
-		T value)
+		string value)
 	{
 		var option = propertyGroupElement.Element(optionName);
 		if (option != null)
@@ -102,7 +119,7 @@ public static class VisualStudioProjectConfigurationService
 		propertyGroupElement.Add(
 			new XElement(
 				optionName,
-				value?.ToString()));
+				value));
 		return true;
 	}
 }
