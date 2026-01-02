@@ -1,5 +1,5 @@
 BeforeAll {
-	Import-Module "$PSScriptRoot\..\..\DotnetPsCmds\bin\Debug\netstandard2.0\Pri.Essentials.DotnetPsCmds.dll";
+	Import-Module "$PSScriptRoot\..\..\DotnetPsCmds\bin\Release\netstandard2.0\Pri.Essentials.DotnetPsCmds.dll";
 }
 
 AfterAll {
