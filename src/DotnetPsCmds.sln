@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pri.Essentials.DotnetProjects", "DotnetProjects\Pri.Essentials.DotnetProjects.csproj", "{8DF3E903-AADE-494A-9146-6E475EEF7362}"
 EndProject
@@ -16,6 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\determine-next-release-version.yaml = ..\.github\workflows\determine-next-release-version.yaml
 		..\.github\workflows\dotnet-build-and-verify.yaml = ..\.github\workflows\dotnet-build-and-verify.yaml
 		..\.github\workflows\pr.yaml = ..\.github\workflows\pr.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pester", "Pester", "{868372A1-4B88-42B8-8FAF-0A298C49A50A}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\Pester\Add-DotnetClassLibProject.Tests.ps1 = Tests\Pester\Add-DotnetClassLibProject.Tests.ps1
 	EndProjectSection
 EndProject
 Global
