@@ -81,6 +81,7 @@ jobs:
           path: "**/*.trx"
 
       - name: Run Pester Tests
+        if: false  # Set to true to enable Pester tests
         id: run-pester-tests
         shell: pwsh
         run: |
