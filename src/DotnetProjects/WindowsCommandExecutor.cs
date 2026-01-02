@@ -81,6 +81,6 @@ public class LinuxShellExecutor : ShellExecutor
     /// <inheritdoc />
     public override ShellResult Execute(string commandLine)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("LinuxShellExecutor is not implemented yet.");
     }
 }
