@@ -84,7 +84,7 @@ jobs:
         id: run-pester-tests
         shell: pwsh
         run: |
-          cd ${{ inputs.source-directory }}/Tests/Pester;
+          cd ./Tests/Pester;
           Import-Module Pester;
           Invoke-Pester -OutputFile pester-results.xml;
 

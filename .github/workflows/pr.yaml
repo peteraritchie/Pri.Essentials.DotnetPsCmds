@@ -40,6 +40,19 @@ jobs:
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
 
+  version-pr-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    needs: determine-next-release-version
+    steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: >
+            Merging this PR will increase the release version from
+            **${{ needs.determine-next-release-version.outputs.current_version }}**
+            to **${{ needs.determine-next-release-version.outputs.version }}**.
+
   # CI: build and verify tests
   build-and-verify:
     name: Build source code and verify tests
