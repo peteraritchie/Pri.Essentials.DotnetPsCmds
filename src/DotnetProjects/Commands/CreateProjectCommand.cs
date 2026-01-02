@@ -1,4 +1,7 @@
-﻿using Pri.Essentials.DotnetProjects.Commands.Constants;
+﻿using System.IO;
+
+using Pri.Essentials.Abstractions;
+using Pri.Essentials.DotnetProjects.Commands.Constants;
 
 namespace Pri.Essentials.DotnetProjects.Commands;
 
@@ -24,14 +27,17 @@ namespace Pri.Essentials.DotnetProjects.Commands;
 /// <param name="frameworkName">
 /// The target framework for the new project.
 /// </param>
+/// <param name="fileSystem"></param>
 public class CreateProjectCommand(
 	IShellExecutor shellExecutor,
 	SupportedProjectTemplateName templateName,
 	string outputDirectory,
 	string outputName,
-	SupportedFrameworkName frameworkName)
+	SupportedFrameworkName frameworkName,
+	IFileSystem? fileSystem = null)
 	: ProjectCommandBase(shellExecutor, outputDirectory, outputName, frameworkName)
 {
+	private readonly IFileSystem fileSystem = fileSystem ?? IFileSystem.Default;
 	/// <inheritdoc />
 	public override string ActionName => BuildCommandLine();
 
@@ -40,6 +46,19 @@ public class CreateProjectCommand(
 	{
 		var commandLine = BuildCommandLine();
 		var result = shellExecutor.Execute(commandLine);
+		if (result.IsSuccess)
+		{
+			var project = new DotnetProject(outputDirectory, outputName);
+			using var stream = fileSystem.FileOpen(project.FullPath,
+				FileMode.Open,
+				FileAccess.ReadWrite,
+				FileShare.None);
+			// add GenerateDocumentationFile true to the csproj file if needed
+			if (ShouldGenerateDocumentationFile is true)
+			{
+				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(stream);
+			}
+		}
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
 		{
 			OperationText = commandLine

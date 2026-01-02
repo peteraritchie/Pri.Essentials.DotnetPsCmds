@@ -62,9 +62,4 @@ public class AddProjectToSolutionCommand(
 
 		return $"dotnet sln {solution.FullPath} add {project.FullPath}{otherOptions}";
 	}
-
-	/// <summary>
-	/// Gets or sets whether to generate the xml doc file
-	/// </summary>
-	public bool? ShouldGenerateDocumentationFile { get; init; }
 }

@@ -9,18 +9,24 @@ using Tests.Mocks;
 
 namespace Tests;
 
-public partial class CreateProjectCommandShould
-	: CommandTestingBase<CreateProjectCommand>
+public partial class CreateClassLibProjectCommandWithShouldGenerateDocumentationFileShould
+	: CommandTestingBase<CreateClassLibProjectCommand>
 {
 	private readonly SpyMemoryStream memoryStream = new();
 
-	public CreateProjectCommandShould()
+	public CreateClassLibProjectCommandWithShouldGenerateDocumentationFileShould()
 		: base(Substitute.For<IShellExecutor>())
 	{
 		spyExecutor
 			.Execute(Arg.Do<string>(a => suppliedCommandLine = a))
 			.Returns(new ShellResult(0, string.Empty, string.Empty));
 		IFileSystem mockFileSystem = Substitute.For<IFileSystem>();
+		mockFileSystem
+			.Exists(Arg.Is(Path.Combine(directory, "Class1.cs")))
+			.Returns(true);
+		mockFileSystem
+			.When(x => x.DeleteFile(Arg.Is<string>(a => a != Path.Combine(directory, "Class1.cs"))))
+			.Do(_ => throw new IOException());
 		memoryStream.Write("""
 		                   <Project Sdk="Microsoft.NET.Sdk">
 		                     <PropertyGroup>
@@ -36,19 +42,22 @@ public partial class CreateProjectCommandShould
 				fileAccess: Arg.Any<FileAccess>(),
 				fileShare: Arg.Any<FileShare>())
 			.Returns(memoryStream);
+
 		sut = InitializeSut(directory, spyExecutor, mockFileSystem);
 	}
 
-	private static CreateProjectCommand InitializeSut(string projectDirectory,
+	private static CreateClassLibProjectCommand InitializeSut(string projectDirectory,
 		IShellExecutor shellExecutor,
 		IFileSystem mockFileSystem)
 	{
-		return new CreateProjectCommand(shellExecutor: shellExecutor,
-			templateName: SupportedProjectTemplateName.ClassLib,
+		return new CreateClassLibProjectCommand(shellExecutor: shellExecutor,
 			outputDirectory: projectDirectory,
 			outputName: "Library",
 			frameworkName: SupportedFrameworkName.Net9,
-			mockFileSystem);
+			mockFileSystem)
+		{
+			ShouldGenerateDocumentationFile = true
+		};
 	}
 
 	[Fact]
@@ -76,6 +85,18 @@ public partial class CreateProjectCommandShould
 		Assert.Equal(directory, match.Groups[3].Value);
 		Assert.Equal("Library", match.Groups[4].Value);
 		Assert.Equal("net9.0", match.Groups[5].Value);
+	}
+
+	[Fact]
+	public void HaveCorrectContent()
+	{
+		var result = sut!.Execute();
+
+		// assert that it is closed
+		Assert.False(memoryStream.CanRead);
+
+		Assert.True(result.IsSuccessful);
+		Assert.Contains("<GenerateDocumentationFile>true</GenerateDocumentationFile>", memoryStream.ToString());
 	}
 
 	[GeneratedRegex(@"^(\S+ \S+) (\S+) -o (\S+) -n (\S+) -f (\S+)$")]

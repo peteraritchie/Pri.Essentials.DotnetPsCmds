@@ -22,6 +22,11 @@ public abstract class CommandBase(IShellExecutor shellExecutor)
 	public abstract string ActionName { get; }
 
 	/// <summary>
+	/// Gets or sets whether to generate the xml doc file
+	/// </summary>
+	public bool? ShouldGenerateDocumentationFile { get; set; }
+
+	/// <summary>
 	/// Execute the command (and perform that action, affecting the target).
 	/// </summary>
 	/// <returns></returns>

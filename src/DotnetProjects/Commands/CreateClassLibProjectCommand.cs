@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 using Pri.Essentials.Abstractions;
 using Pri.Essentials.DotnetProjects.Commands.Constants;
@@ -36,10 +37,26 @@ public class CreateClassLibProjectCommand(
 		var commandLine = BuildCommandLine();
 		var result = shellExecutor.Execute(commandLine);
 
-		if (fileSystem.Exists(Path.Combine(outputDirectory, "Class1.cs")))
+		if (result.IsSuccess)
 		{
-			TryDelete(Path.Combine(outputDirectory, "Class1.cs"));
+			var project = new DotnetProject(outputDirectory, outputName);
+			using var stream = fileSystem.FileOpen(project.FullPath,
+				FileMode.Open,
+				FileAccess.ReadWrite,
+				FileShare.None);
+
+			if (fileSystem.Exists(Path.Combine(outputDirectory, "Class1.cs")))
+			{
+				TryDelete(Path.Combine(outputDirectory, "Class1.cs"));
+			}
+
+			// add GenerateDocumentationFile true to the csproj file if needed
+			if (ShouldGenerateDocumentationFile is true)
+			{
+				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(stream);
+			}
 		}
+
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
 		{
 			OperationText = commandLine
@@ -74,9 +91,23 @@ public class CreateClassLibProjectCommand(
 	/// <inheritdoc />
 	protected override string BuildCommandLine()
 	{
-		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
-		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
+		StringBuilder stringBuilder = new();
+		stringBuilder.Append("dotnet new ")
+			.Append(SupportedProjectTemplateName.ClassLib);
 
-		return $"dotnet new {SupportedProjectTemplateName.ClassLib}{outputDirectoryOption}{outputNameOption} -f {FrameworkName}";
+		if(!string.IsNullOrWhiteSpace(outputDirectory))
+		{
+			stringBuilder.Append($" -o {outputDirectory}");
+		}
+
+		if(!string.IsNullOrWhiteSpace(outputDirectory))
+		{
+			stringBuilder.Append($" -n {outputName}");
+		}
+
+		stringBuilder.Append(" -f ")
+			.Append(FrameworkName);
+
+		return stringBuilder.ToString();
 	}
 }

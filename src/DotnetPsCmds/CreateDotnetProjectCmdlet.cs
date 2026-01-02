@@ -155,7 +155,8 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		var executor = ShellExecutor.Instance;
 		Debug.Assert(supportedTemplateName != null);
 		var createCommand = DetermineCreateCommand(executor,
-			supportedTemplateName!);
+			supportedTemplateName!,
+			ShouldGenerateDocumentationFile);
 
 		if (ShouldProcess(createCommand.Target, createCommand.ActionName))
 		{
@@ -192,7 +193,6 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 				var addCommand = DetermineAddCommand(executor,
 					Solution,
 					createdProject,
-					ShouldGenerateDocumentationFile,
 					SolutionFolder);
 				if (ShouldProcess(addCommand.Target, addCommand.ActionName))
 				{
@@ -228,20 +228,26 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	}
 
 	private CommandBase DetermineCreateCommand(IShellExecutor executor,
-		SupportedProjectTemplateName template)
+		SupportedProjectTemplateName template,
+		SwitchParameter shouldGenerateDocumentationFile)
 	{
-		return ProjectTemplateNameMapping.CommandMap[template](
+		var createCommand = ProjectTemplateNameMapping.CommandMap[template](
 			executor,
 			template,
 			OutputDirectory!,
 			OutputName!,
 			frameworkName ?? SupportedFrameworkName.Net10);
+
+		createCommand.ShouldGenerateDocumentationFile
+			= shouldGenerateDocumentationFile.IsPresent
+				? shouldGenerateDocumentationFile
+				: null;
+		return createCommand;
 	}
 
 	private static CommandBase DetermineAddCommand(IShellExecutor executor,
 		DotnetSolution solution,
 		DotnetProject project,
-		SwitchParameter shouldGenerateDocumentationFile,
 		string? solutionFolder)
 	{
 		return new AddProjectToSolutionCommand(executor,
@@ -249,10 +255,6 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			project,
 			solutionFolder)
 		{
-			ShouldGenerateDocumentationFile
-				= shouldGenerateDocumentationFile.IsPresent
-					? shouldGenerateDocumentationFile
-					: null
 			// TODO: other options?
 		};
 	}
