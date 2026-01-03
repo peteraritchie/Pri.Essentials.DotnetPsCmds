@@ -114,6 +114,13 @@ jobs:
           -VariablesToExport @() `
           -AliasesToExport @()
 
+      - name: Upload module artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Module
+          path: "Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1"
+          if-no-files-found: error
+
       - name: Run Pester Tests
         id: run-pester-tests
         shell: pwsh
