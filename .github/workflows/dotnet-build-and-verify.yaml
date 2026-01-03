@@ -118,7 +118,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: Module
-          path: "Pri.Essentials.DotnetPsCmds"
+          path: "${{ inputs.source-directory }}/Pri.Essentials.DotnetPsCmds"
           if-no-files-found: error
 
       - name: Run Pester Tests
