@@ -90,28 +90,28 @@ jobs:
       - name: Create PowerShell module manifest
         shell: pwsh
         run: >
-          New-ModuleManifest `
-          -Path 'Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1' `
-          -RootModule 'Pri.Essentials.DotnetPsCmds.dll' `
-          -RequiredAssemblies `
-            'Pri.Essentials.Abstractions.dll', `
-            'Pri.Essentials.DotnetProjects.dll' `
-          -Author 'Peter Ritchie' `
-          -Company 'Peter Ritchie' `
-          -ModuleVersion '0.1.0' `
-          -Description 'DotNet PowerShell Commands' `
-          -ProjectUri ([System.Uri]::new('https://blog.peterritchie.com/')) `
-          -Tags @('.NET', 'dotnet', 'dotnet cli') `
-          -PowerShellVersion '5.1' `
-          -CmdletsToExport @( `
-            'Add-DotnetPackage', `
-            'Add-DotnetPackages', `
-            'Add-DotnetProject', `
-            'Add-DotnetProjectReference', `
-            'New-DotnetProject', `
-            'New-DotnetSolution') `
-          -FunctionsToExport @() `
-          -VariablesToExport @() `
+          New-ModuleManifest
+          -Path 'Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1'
+          -RootModule 'Pri.Essentials.DotnetPsCmds.dll'
+          -RequiredAssemblies
+            'Pri.Essentials.Abstractions.dll',
+            'Pri.Essentials.DotnetProjects.dll'
+          -Author 'Peter Ritchie'
+          -Company 'Peter Ritchie'
+          -ModuleVersion '0.1.0'
+          -Description 'DotNet PowerShell Commands'
+          -ProjectUri ([System.Uri]::new('https://blog.peterritchie.com/'))
+          -Tags @('.NET', 'dotnet', 'dotnet cli')
+          -PowerShellVersion '5.1'
+          -CmdletsToExport @(
+            'Add-DotnetPackage',
+            'Add-DotnetPackages',
+            'Add-DotnetProject',
+            'Add-DotnetProjectReference',
+            'New-DotnetProject',
+            'New-DotnetSolution')
+          -FunctionsToExport @()
+          -VariablesToExport @()
           -AliasesToExport @()
 
       - name: Upload module artifact
