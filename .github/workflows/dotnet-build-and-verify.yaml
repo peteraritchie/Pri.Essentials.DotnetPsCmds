@@ -82,7 +82,7 @@ jobs:
 
       - name: dotnet publish Pri.Essentials.DotnetPsCmds.csproj
         run: >
-          dotnet publish DotnetPsCmds\Pri.Essentials.DotnetPsCmds.csproj
+          dotnet publish DotnetPsCmds/Pri.Essentials.DotnetPsCmds.csproj
           -c Release
           --no-build
           -o Pri.Essentials.DotnetPsCmds
