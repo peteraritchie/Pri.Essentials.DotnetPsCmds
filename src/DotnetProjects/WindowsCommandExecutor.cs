@@ -56,7 +56,7 @@ public sealed class WindowsShellExecutor : ShellExecutor
     /// <inheritdoc />
     public override ShellResult Execute(string commandLine)
     {
-        var startInfo = new ProcessStartInfo("cmd.exe", $"/c {commandLine}")
+        var startInfo = new ProcessStartInfo(fileName: "cmd.exe", arguments: $"/c {commandLine}")
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -70,17 +70,5 @@ public sealed class WindowsShellExecutor : ShellExecutor
         ShellResult shellResult = new(p.ExitCode, p.StandardOutput.ReadToEnd(), p.StandardError.ReadToEnd());
 
         return shellResult;
-    }
-}
-
-/// <summary> A proxy to the Linux shell </summary>
-/// <remarks>WIP</remarks>
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-public class LinuxShellExecutor : ShellExecutor
-{
-    /// <inheritdoc />
-    public override ShellResult Execute(string commandLine)
-    {
-        throw new NotImplementedException("LinuxShellExecutor is not implemented yet.");
     }
 }
