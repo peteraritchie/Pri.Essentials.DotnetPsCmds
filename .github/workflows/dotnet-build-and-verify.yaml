@@ -22,19 +22,13 @@ on:  # yamllint disable-line rule:truthy
         type: string
       source-directory:
         description: "Relative directory where source code is located"
-        required: false
+        required: true
         type: string
-        default: .
       artifact-name:
         description: "Name of the artifact to upload"
-        required: false
+        required: true
         type: string
-        default: Packages
-      main-library-subdir:
-        description: "Directory of the main library project"
-        required: false
-        type: string
-        default: .
+
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
@@ -142,10 +136,3 @@ jobs:
         with:
           name: pester-test-results
           path: "**/pester-results.xml"
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ inputs.artifact-name }}
-          path: "${{ inputs.source-directory }}/${{ inputs.main-library-subdir }}/bin"
-          if-no-files-found: error

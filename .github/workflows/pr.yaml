@@ -67,5 +67,4 @@ jobs:
       dotnet-versions: 10.0.x  # ${{ env.DOTNET_CORE_VERSION }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
-      artifact-name: Packages
-      main-library-subdir: DotnetPsCmds
+      artifact-name: Module
