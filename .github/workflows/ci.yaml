@@ -1,0 +1,117 @@
+---
+name: CI
+run-name: >
+  Build and create release - '${{ github.event.head_commit.message }}',
+  from ${{ github.ref }} by @${{ github.actor }}
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '!.github/**'
+      - '.github/workflows/ci.yaml'
+      - '.github/workflows/dotnet-build-and-verify.yaml'
+      - 'src/**'
+
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Use dry-run when publishing"
+        required: false
+        type: boolean
+        default: false
+      cd-disabled:
+        description: "Disable CD"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 10.0.x
+
+jobs:
+  # Determining next release version from current release version
+  determine-next-release-version:
+    name: Determine next Release version
+    uses: ./.github/workflows/determine-next-release-version.yaml
+    permissions:
+      contents: read  # Required for checking out the code
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+
+  # CI: build and verify tests
+  build-and-verify:
+    name: Build and verify tests
+    needs: determine-next-release-version
+    uses: ./.github/workflows/dotnet-build-and-verify.yaml
+    permissions:
+      contents: read  # Required for checking out the code
+    with:
+      configuration: Release  # ${{ env.CONFIGURATION }}
+      dotnet-versions: 10.0.x  # ${{ env.DOTNET_CORE_VERSION }}
+      version: ${{ needs.determine-next-release-version.outputs.version }}
+      source-directory: ./src
+      artifact-name: Packages
+
+  # release
+  release:
+    name: Release module
+    needs: [build-and-verify, determine-next-release-version]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # to be able to publish a GitHub release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Create a tag for GitHub Releases
+      - name: Create Tag
+        id: create-tag
+        run: |
+          git tag v${{ needs.determine-next-release-version.outputs.version }}
+          echo "tag=\
+            v${{ needs.determine-next-release-version.outputs.version }}" \
+            >> $GITHUB_OUTPUT
+
+      # Create a GitHub Release
+      - name: Create GitHub Release
+        id: create-module-release
+        uses: actions/create-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.create-tag.outputs.tag }}
+          release_name: Release ${{ steps.create-tag.outputs.tag }}
+          body: |
+            Release created automatically by GitHub Actions.
+          draft: false
+          prerelease: ${{ env.prerelease }}
+
+      # Download Module artifact
+      - name: Download artifact for Release
+        id: download-artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: Module
+          path: ./Module
+
+      # re-zip to add to the Release
+      - name: Create Module zip
+        run: |
+          (cd Module && zip -r Module.zip .)
+
+      # Upload the Module zip as a Release Asset
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-module-release.outputs.upload_url }}
+          asset_path: Module/Module.zip
+          asset_name: Module.zip
+          asset_content_type: application/zip
+
+   # publish
