@@ -59,7 +59,7 @@ jobs:
       contents: read  # Required for checking out the code
     with:
       configuration: |
-        ${{ vars.CONFIGURATION != '' && vars.CONFIGURATION || 'Release'}}
+        ${{ vars.CONFIGURATION != '' && vars.CONFIGURATION || 'Release' }}
       dotnet-versions: |
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
