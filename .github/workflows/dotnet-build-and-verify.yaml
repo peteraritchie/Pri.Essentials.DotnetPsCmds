@@ -98,7 +98,7 @@ jobs:
           'Pri.Essentials.DotnetProjects.dll'
           -Author 'Peter Ritchie'
           -Company 'Peter Ritchie'
-          -ModuleVersion '0.1.0'
+          -ModuleVersion '${{ inputs.version }}'
           -Description 'DotNet PowerShell Commands'
           -ProjectUri ([System.Uri]::new('https://blog.peterritchie.com/'))
           -Tags @('.NET', 'dotnet', 'dotnet cli')
