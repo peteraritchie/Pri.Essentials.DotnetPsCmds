@@ -28,6 +28,10 @@ on:  # yamllint disable-line rule:truthy
         description: "Name of the artifact to upload"
         required: true
         type: string
+      module-guid:
+        description: "GUID for the PowerShell module"
+        required: true
+        type: string
 
 jobs:
   build-and-verify:
@@ -87,6 +91,7 @@ jobs:
         shell: pwsh
         run: >
           New-ModuleManifest
+          -Guid ${{ inputs.module-guid }}
           -Path 'Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1'
           -RootModule 'Pri.Essentials.DotnetPsCmds.dll'
           -RequiredAssemblies 'Pri.Essentials.Abstractions.dll',

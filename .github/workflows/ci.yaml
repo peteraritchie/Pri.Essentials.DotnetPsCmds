@@ -31,6 +31,7 @@ on:  # yamllint disable-line rule:truthy
 env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 10.0.x
+  MODULE_GUID: 'c9b3a6b7-e2c2-462a-961c-25848d23041b'
 
 jobs:
   # Determining next release version from current release version
@@ -55,6 +56,7 @@ jobs:
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
       artifact-name: Module
+      module-guid: ${{ env.MODULE_GUID }}
 
   # release
   release:
@@ -79,7 +81,7 @@ jobs:
       # Create a GitHub Release
       - name: Create GitHub Release
         id: create-module-release
-        uses: actions/create-release@v1.0.1
+        uses: actions/create-release@v1.1.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -93,7 +95,7 @@ jobs:
       # Download Module artifact
       - name: Download artifact for Release
         id: download-artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: Module
           path: ./Module
@@ -114,4 +116,32 @@ jobs:
           asset_name: Module.zip
           asset_content_type: application/zip
 
-   # publish
+  # publish (publish release binary or artifact?)
+  publish:
+    name: Publish module to PowerShell Gallery
+    environment: PowerShellGallery
+    if: false  # todo: enable conditionally based on inputs.cd-disabled
+    runs-on: ubuntu-latest
+    # use output from build-and-verify but after release is sucessful:
+    needs: [build-and-verify, release]
+    permissions:
+      contents: read  # Required for checking out the code
+      actions: read  # Required for access to artifacts
+    steps:
+      # Download Module artifact
+      - name: Download Module artifact for Release
+        id: download-artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: Module
+          path: ./Pri.Essentials.DotnetPsCmds
+
+      # publish PS module (TODO: Parameterize -WhatIf)
+      - name: Publish PowerShell module
+        shell: pwsh
+        run: >
+          Publish-Module -Path "Pri.Essentials.DotnetPsCmds"
+          -NuGetApiKey "${{ secrets.NUGET_API_KEY }}"
+          -Repository '${{ vars.PS_REPOSITORY }}'
+          -WhatIf
+          -Verbose
