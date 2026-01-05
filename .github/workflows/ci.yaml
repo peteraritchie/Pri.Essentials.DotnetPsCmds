@@ -28,8 +28,8 @@ on:  # yamllint disable-line rule:truthy
         type: boolean
         default: false
 
-  env:
-    dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || true }}
+env:
+  dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || true }}
 
 jobs:
   # Determining next release version from current release version
