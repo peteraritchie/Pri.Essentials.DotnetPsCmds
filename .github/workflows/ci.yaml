@@ -93,7 +93,7 @@ jobs:
       # Download Module artifact
       - name: Download artifact for Release
         id: download-artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: Module
           path: ./Module
