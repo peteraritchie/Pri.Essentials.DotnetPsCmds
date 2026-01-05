@@ -28,11 +28,6 @@ on:  # yamllint disable-line rule:truthy
         type: boolean
         default: false
 
-env:
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 10.0.x
-  MODULE_GUID: 'c9b3a6b7-e2c2-462a-961c-25848d23041b'
-
 jobs:
   # Determining next release version from current release version
   determine-next-release-version:
@@ -51,12 +46,14 @@ jobs:
     permissions:
       contents: read  # Required for checking out the code
     with:
-      configuration: Release  # ${{ env.CONFIGURATION }}
-      dotnet-versions: 10.0.x  # ${{ env.DOTNET_CORE_VERSION }}
+      configuration: |
+        ${{ vars.CONFIGURATION != '' && vars.CONFIGURATION || 'Release'}}
+      dotnet-versions: |
+        ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
       artifact-name: Module
-      module-guid: ${{ env.MODULE_GUID }}
+      module-guid: ${{ vars.PS_MODULE_GUID }}
 
   # release
   release:
