@@ -28,6 +28,9 @@ on:  # yamllint disable-line rule:truthy
         type: boolean
         default: false
 
+  env:
+    dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || true }}
+
 jobs:
   # Determining next release version from current release version
   determine-next-release-version:
@@ -117,7 +120,7 @@ jobs:
   publish:
     name: Publish module to PowerShell Gallery
     environment: PowerShellGallery
-    if: false  # todo: enable conditionally based on inputs.cd-disabled
+    if: ${{ (inputs.cd-disabled != '' && inputs.cd-disabled != 'true' || true) }}
     runs-on: ubuntu-latest
     # use output from build-and-verify but after release is sucessful:
     needs: [build-and-verify, release]
@@ -140,5 +143,5 @@ jobs:
           Publish-Module -Path "Pri.Essentials.DotnetPsCmds"
           -NuGetApiKey "${{ secrets.NUGET_API_KEY }}"
           -Repository '${{ vars.PS_REPOSITORY }}'
-          -WhatIf
+          ${{ (env.dry-run != '' && env.dry-run == 'true') && '-WhatIf' }}
           -Verbose
