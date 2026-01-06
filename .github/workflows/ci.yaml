@@ -14,6 +14,7 @@ on:  # yamllint disable-line rule:truthy
       - '.github/workflows/ci.yaml'
       - '.github/workflows/dotnet-build-and-verify.yaml'
       - 'src/**'
+      - '!src/Tests/**'
 
   workflow_dispatch:
     inputs:
