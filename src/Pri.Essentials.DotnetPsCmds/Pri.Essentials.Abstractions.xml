@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Pri.Essentials.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Pri.Essentials.Abstractions.FileSystem">
+            <summary>
+            A file system abstraction.
+            </summary>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystem.Exists(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystem.FileExists(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystem.DirectoryExists(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystem.DeleteFile(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystem.FileOpen(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <inheritdoc />
+        </member>
+        <member name="T:Pri.Essentials.Abstractions.IFileSystem">
+            <summary>
+            Provides an abstraction for file system operations, including checking for the existence of files and directories
+            and deleting files.
+            </summary>
+            <remarks>Implementations of this interface allow code to interact with the file system in a
+            platform-independent manner, which is useful for testing and for supporting multiple storage backends. Methods may
+            throw exceptions if invalid paths are provided or if operations fail due to permissions or other file system
+            errors.</remarks>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.IFileSystem.Exists(System.String)">
+            <summary>
+            Determines whether the specified path refers to an existing file or directory.
+            </summary>
+            <param name="path">The path to the file or directory to check. This can be either an absolute or relative path. Cannot be null or
+            empty.</param>
+            <returns>true if the specified path exists as a file or directory; otherwise, false.</returns>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.IFileSystem.FileExists(System.String)">
+            <summary>
+            Determines whether the specified file exists at the given path.
+            </summary>
+            <remarks>This method only checks for the existence of a file, not a directory. The result may be affected
+            by file system permissions or concurrent changes to the file system.</remarks>
+            <param name="path">The path to the file to check for existence. This can be either a relative or absolute path. Cannot be null or an
+            empty string.</param>
+            <returns>true if a file exists at the specified path; otherwise, false.</returns>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.IFileSystem.DirectoryExists(System.String)">
+            <summary>
+            Determines whether the specified path refers to an existing directory.
+            </summary>
+            <remarks>This method does not validate whether the path is a file or a directory; it only checks for the
+            existence of a directory at the specified path. No exception is thrown if the directory does not exist or the path
+            is invalid.</remarks>
+            <param name="path">The path to the directory to check. The path can be relative or absolute. Cannot be null, empty, or contain
+            invalid characters.</param>
+            <returns>true if the specified path refers to an existing directory; otherwise, false.</returns>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.IFileSystem.DeleteFile(System.String)">
+            <summary>
+            Deletes the specified file from the file system.
+            </summary>
+            <remarks>
+            If the file does not exist, no exception is thrown. This method does
+            not delete directories. Relative paths are interpreted relative to
+            the current working directory.
+            </remarks>
+            <param name="path">
+            The path to the file to be deleted. The path must refer to an
+            existing file and cannot be null, empty, or contain invalid characters.
+            </param>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.IFileSystem.FileOpen(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)">
+            <summary>
+            Opens a file stream for the specified file with the given mode,
+            access, and sharing options.
+            </summary>
+            <param name="path"></param>
+            <param name="fileMode"></param>
+            <param name="fileAccess"></param>
+            <param name="fileShare"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Pri.Essentials.Abstractions.FileSystemExtensions">
+            <summary>
+            Extension members for IFileSystem
+            </summary>
+        </member>
+        <member name="M:Pri.Essentials.Abstractions.FileSystemExtensions.get_Default">
+            <inheritdoc cref="P:Pri.Essentials.Abstractions.FileSystemExtensions.&lt;G&gt;$2DE4932946A453D71B84A41D7AD8971D.Default"/>
+        </member>
+        <member name="P:Pri.Essentials.Abstractions.FileSystemExtensions.&lt;G&gt;$2DE4932946A453D71B84A41D7AD8971D.Default">
+            <summary>
+            A singleton instance of a default IFileSystem implementation
+            </summary>
+        </member>
+    </members>
+</doc>

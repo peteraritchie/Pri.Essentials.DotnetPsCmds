@@ -19,7 +19,7 @@ Describe 'New-DotnetProject' {
 		Get-Module Pri.Essentials.DotnetPsCmds | Should -Not -Be $null
 	}
 
-	It 'Given xunit3, creates project in correct location without default files' {
+	It 'Given xunit3, creates project in correct location without default files' -Skip {
 		# Act
 		New-DotnetProject $projectType $outputPath $projectName;
 

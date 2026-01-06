@@ -15,7 +15,7 @@ Describe 'Add-DotnetProjectReference' {
 	It 'Given project reference added correctly.' {
 		# Act
 		$classLib = New-DotnetProject 'classlib' "$outputPath/MyClassLib" MyClassLib;
-		$tests = New-DotnetProject 'xunit3' "$outputPath/Tests" Tests;
+		$tests = New-DotnetProject 'xunit' "$outputPath/Tests" Tests;
 		$tests | Add-DotnetProjectReference -Project $classLib;
 
 		# Assert
@@ -30,7 +30,7 @@ Describe 'Add-DotnetProjectReference' {
 	It 'Given TargetProject, project reference added correctly.' {
 		# Act
 		$classLib = New-DotnetProject 'classlib' "$outputPath/MyClassLib" MyClassLib;
-		$tests = New-DotnetProject 'xunit3' "$outputPath/Tests" Tests;
+		$tests = New-DotnetProject 'xunit' "$outputPath/Tests" Tests;
 		Add-DotnetProjectReference -Project $classLib -TargetProject $tests;
 
 		# Assert
