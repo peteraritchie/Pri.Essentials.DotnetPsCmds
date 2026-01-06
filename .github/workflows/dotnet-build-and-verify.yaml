@@ -127,7 +127,6 @@ jobs:
           cd ./Tests/Pester;
           Import-Module Pester;
           $config = New-PesterConfiguration;
-          $config.Run.Path = './Add-DotnetClassLibProject.Tests.ps1';
           $config.TestResult.OutputPath = 'pester-results.xml';
           $config.TestResult.OutputFormat = 'NUnitXML';
           $config.TestResult.Enabled = $true;
