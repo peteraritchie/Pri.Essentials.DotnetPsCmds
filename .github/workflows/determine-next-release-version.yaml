@@ -47,6 +47,9 @@ on:  # yamllint disable-line rule:truthy
       version:
         description: the version number that was determined
         value: ${{ jobs.determine_next_release_version.outputs.version}}
+      current_version:
+        description: the current version number
+        value: ${{ jobs.determine_next_release_version.outputs.current_version}}
     inputs:
       logLevel:
         description: 'Log level'
@@ -74,6 +77,7 @@ jobs:
     name: Determine next Release version
     outputs:
       version: ${{ steps.determine_new_version.outputs.version }}
+      current_version: ${{ steps.determine_new_version.outputs.current_version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -153,6 +157,9 @@ jobs:
                 $minor = [int]$matches[2]
                 $patch = [int]$matches[3]
 
+                $currentVersion = "$major.$minor.$patch";
+                Write-Output "current_version=$currentVersion" >> $env:GITHUB_OUTPUT
+
                 switch ($scope) {
                   "major" { $major++; $minor = 0; $patch = 0 }
                   "minor" { $minor++; $patch = 0 }
@@ -160,7 +167,7 @@ jobs:
                 }
 
                 $newVersion = "$major.$minor.$patch"
-                echo "version=$newVersion" >> $env:GITHUB_OUTPUT
+                Write-Output "version=$newVersion" >> $env:GITHUB_OUTPUT
             }
             else {
                 Write-Error "Version string not in expected format (vX.Y.Z)"
@@ -170,4 +177,6 @@ jobs:
         if: ${{ inputs.logLevel == 'info' || inputs.logLevel == 'debug' }}
         run: >
           echo "Determined that the next version is:
-          ${{steps.determine_new_version.outputs.version }}"
+          ${{steps.determine_new_version.outputs.version }}
+          (currently
+          '${{steps.determine_new_version.outputs.current_version }}')"
