@@ -130,6 +130,7 @@ jobs:
           $config.TestResult.OutputPath = 'pester-results.xml';
           $config.TestResult.OutputFormat = 'NUnitXML';
           $config.TestResult.Enabled = $true;
+          $config.Run.Exit = $true;
           Invoke-Pester -Configuration $config;
 
       - name: Upload Pester test results

@@ -1,4 +1,5 @@
 ﻿BeforeAll {
+	dotnet new install xunit.v3.templates;
 	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
 	$projectType = 'xunit3';
 	$projectName = 'Tests';
