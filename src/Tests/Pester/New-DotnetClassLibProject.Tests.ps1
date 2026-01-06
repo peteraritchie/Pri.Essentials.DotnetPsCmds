@@ -1,6 +1,8 @@
 BeforeAll {
-	# Import-Module "$PSScriptRoot/../../DotnetPsCmds/bin/Release/netstandard2.0/Pri.Essentials.DotnetPsCmds.dll";
 	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
+	$projectType = 'classlib';
+	$projectName = 'MyClassLib';
+	$outputPath = "$PSScriptRoot/TestProjects/Pri.TheProduct/$projectName";
 }
 
 AfterAll {
@@ -9,7 +11,7 @@ AfterAll {
 
 Describe 'New-DotnetProject' {
 	AfterEach {
-		Remove-Item "$PSScriptRoot/TestProjects" -Recurse -Force -ErrorAction SilentlyContinue;
+		Remove-Item "$PSScriptRoot/TestProjects" -Recurse -Force -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue;
 	}
 
 	It 'Installed correctly' {
@@ -17,11 +19,6 @@ Describe 'New-DotnetProject' {
 	}
 
 	It 'Given classlib, creates project in correct location without default files' {
-		# Arrange
-		$projectType = 'classlib'
-		$projectName = 'MyClassLib'
-		$outputPath = "$PSScriptRoot/TestProjects/Pri.TheProduct/$projectName"
-
 		# Act
 		New-DotnetProject $projectType $outputPath $projectName;
 
@@ -31,11 +28,6 @@ Describe 'New-DotnetProject' {
 	}
 
 	It 'Given classlib and GenerateDocumentationFile, creates correct project' {
-		# Arrange
-		$projectType = 'classlib'
-		$projectName = 'MyClassLib'
-		$outputPath = "$PSScriptRoot/TestProjects/Pri.TheProduct.$projectName"
-
 		# Act
 		New-DotnetProject $projectType $outputPath $projectName -ShouldGenerateDocumentationFile;
 
