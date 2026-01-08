@@ -1,5 +1,14 @@
 # Dotnet PowerShell Cmdlets
 
+## Contents
+- [Getting Started](#getting-started)
+- [New-DotnetSolution](#create-a-net-solution)
+- [New-DotnetProject](#create-a-net-project)
+- [Add-DotnetProjectReference](#adding-project-references)
+- [Add-DotnetPackages](#adding-nuget-package-references)
+- [Add-DotnetProject](#adding-project-references)
+- [Scaffolding complete solutions](#scaffolding-complete-solutions)
+ 
 ## Getting Started
 
 Install the Dotnet PowerShell Cmdlets
@@ -10,16 +19,16 @@ Import-Module Pri.Essentials.DotnetPsCmds;
 
 ## Using the Dotnet PowerShell Cmdlets
 
-Create a .NET solution:
+### Create a .NET solution
 
 ```pwsh
 New-DotnetSolution;
 ```
 
-Which creates a solution in the current directory using the name of the current
-directory for the name of the solution.
+This creates a solution in the current directory, using the current directory
+name as the solution name (`dotnet new sln`).
 
-To Create a solution in a specific directory with a specific name:
+To create a solution in a specific directory with a specific name:
 ```pwsh
 New-DotnetSolution -OutputDirectory directory-name -Name solution-name;
 ```
@@ -28,7 +37,8 @@ OR
 New-DotnetSolution MyProduct MySolution;
 ```
 
-Which creates a solution with the relative path of `MyProduct/MySolution.sln`.
+This creates a solution with the relative path of `MyProduct/MySolution.sln`
+(`dotnet new sln -o MyProduct -n MySolution`).
 
 The cmdlets return objects that can be used with other cmdlets. For example,
 to create a solution and store it in a variable:
@@ -37,18 +47,18 @@ to create a solution and store it in a variable:
 $solution = New-DotnetSolution MyProduct;
 ```
 
-Create a .NET project:
+### Create a .NET project
 
 ```pwsh
 New-DotnetProject 'classlib' Domain MyProduct.Domain;
 ```
 
 Creates a class library project with the name "MyProduct.Domain" in the
-"Domain" directory.
+"Domain" directory (`dotnet new classlib -o Domain -n MyProduct.Domain`).
 
-At this point, you might be thinking "how is this diffent that using
-the `dotnet` command line tool?" The objects returned by the cmdlets can be
-built upon those executed cmdlets. For example, in complex solutions
+At this point, you might be thinking, _how is this different than using
+the `dotnet` command line tool?_ The objects returned by the cmdlets can be
+built upon the results of executed cmdlets. For example, in complex solutions,
 you're going to want to add projects to the solution file. You can do that
 by using a solution object:
 
@@ -58,7 +68,7 @@ New-DotnetProject 'classlib' MyProduct/Domain MyProduct.Domain -Solution $soluti
 ```
 New-DotnetProject 'classlib' $solution.Directory/Domain $solution.Name.Domain -Solution $solution;
 
-Creates the solution `MyProduct/MyProduct.sln` then creates the project
+Creates the solution `MyProduct/MyProduct.sln`, then creates the project
 `MyProduct/Domain/MyProduct.Domain.csproj` and adds the project to the
 solution.
 
@@ -80,40 +90,46 @@ $s | New-DotnetProject 'classlib' MyProduct/Domain MyProduct.Domain;
 $s | New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
 ```
 
-## Adding project references
+### Adding project references
 
 ```pwsh
 $c = New-DotnetProject 'classlib' MyProduct/Domain MyProduct.Domain;
 $t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
 Add-DotnetProjectReference -Project $c -TargetProject $t;
+$s = New-DotnetSolution MyProduct;
+Add-DotnetProject -Solution $s -Project $c;
+Add-DotnetProject -Solution $s -Project $t;
 ```
 
-Which creates a class library, a unit tests project, and adds a reference
+This creates a class library and a unit test project, and adds a reference
 to the class library to the tests project.
 
 Of course, pipes can be used here:
 
 ```pwsh
 $c = New-DotnetProject 'classlib' MyProduct/Domain MyProduct.Domain;
-New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests `
+$t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests `
     | Add-DotnetProjectReference -Project $c;
+New-DotnetSolution MyProduct `
+    | Add-DotnetProject -Project $c `
+    | Add-DotnetProject -Project $t;
 ```
 
-## Adding NuGet package references
+### Adding NuGet package references
 
 ```pwsh
 $t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
 Add-DotnetPackages -PackageIds NSubstitute -Project $t;
 ```
 
-Piping supported here as well:
+Piping is supported here as well:
 
 ```pwsh
 New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests `
     | Add-DotnetPackages NSubstitute;
 ```
 
-## Scaffolding complete solutions
+### Scaffolding complete solutions
 
 ```pwsh
 $s = New-DotnetSolution MyProduct;
@@ -127,59 +143,16 @@ $t = New-DotnetProject 'xunit' "$($s.Directory)/Tests" "$($s.Name).Tests" `
 
 ## Reference
 
-### Add-DotnetPackage Cmdlet
-
-```pwsh
-```
-
-### Add-DotnetPackages Cmdlet
-
-```pwsh
-```
-
-### Add-DotnetProject Cmdlet
-
-```pwsh
-```
-
-### Add-DotnetProjectReference Cmdlet
-
-```pwsh
-```
-
-### New-DotnetProject Cmdlet
-
-```pwsh
-```
-
 ### New-DotnetSolution Cmdlet
 
-```pwsh
+```text
+New-DotnetSolution [[-OutputDirectory] <string>] [[-OutputName] <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-### DotnetSolution Class
+Create a new solution in a specific directory, using the name of the
+specified directory for the name of the solution
+(`dotnet new sln -o ./MyProduct`):
 
-```pwsh
-```
-
-### DotnetProject Class
-
-```pwsh
-```
-
----
-
-### Creating a solution
-
-Create a new solution in the current directory, using the name of the current
-directory for the name of the solution (`dotnet new sln`):
-
-```pwsh
-New-DotnetSolution;
-```
-
-### Create a new solution in a specific directory, using the name of specific
-direction for the name of the solution (`dotnet new sln -o ./MyProduct`):
 ```pwsh
 New-DotnetSolution MyProduct;
 ```
@@ -196,8 +169,9 @@ Or:
 New-DotnetSolution -Path MyProduct;
 ```
 
-### Create a new solution in a specific directory, with a specific name of 
-the solution (`dotnet new sln -o ./MyProduct -n MySolution`):
+Create a new solution in a specific directory, with a specific name
+of the solution (`dotnet new sln -o ./MyProduct -n MySolution`):
+
 ```pwsh
 New-DotnetSolution MyProduct MySolution;
 ```
@@ -214,28 +188,44 @@ Or:
 New-DotnetSolution -Path MyProduct -Name MySolution;
 ```
 
-### Create a new solution in the current directory and create a new class library
-project within the solution:
-```pwsh
-New-DotnetSolution | New-DotnetProject 'classlib'
-```
-```pwsh
-$s = New-DotnetSolution;
-$s | New-DotnetProject 'classlib';
-```
-Or:
-```pwsh
-New-DotnetSolution | New-DotnetProject -TemplateName 'classlib';
+### Add-DotnetPackages Cmdlet
+
+```text
+Add-DotnetPackages [-PackageIds] <string[]> [-Project] <DotnetProject> [[-Prerelease] <bool>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-Equivalent to (in current directory `MyProduct`):
+Create a project and add a NuGet package reference:
 ```pwsh
-dotnet new sln;
-dotnet new classlib;
-dotnet sln add MyProduct.csproj --in-root;
+New-DotnetProject 'xunit3' Tests `
+    | Add-DotnetPackages -PackageId "NSubstitute";
 ```
 
-### Create a new solution in the current directory, create a new class library, and create a tests project in a Tests directory within the solution:
+Create a project and add multiple NuGet package references
+
+```pwsh
+New-DotnetProject 'xunit3' MyLibrary.Tests `
+    | Add-DotnetPackages 'NSubstitute', 'FluentAssertions';
+```
+
+Equivalent to:
+```pwsh
+dotnet new xunit3 -o MyLibrary.Tests
+dotnet add Tests package NSubstitute
+dotnet add Tests package FluentAssertions
+```### Add-DotnetProject Cmdlet
+
+```text
+Add-DotnetProject [-Solution] <DotnetSolution> [-Project] <DotnetProject> [-SolutionFolder <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+### Add-DotnetProjectReference Cmdlet
+
+```text
+Add-DotnetProjectReference [-Project] <DotnetProject> [-TargetProject] <DotnetProject> [-WhatIf] [-Confirm][<CommonParameters>]
+```
+
+Create a new solution in the current directory, create a new class library,
+and create a tests project in a Tests directory within the solution:
 
 ```pwsh
 $s = New-DotnetSolution;
@@ -247,9 +237,9 @@ Or:
 ```pwsh
 $s = New-DotnetSolution;
 $lib = $s | New-DotnetProject -TemplateName 'classlib';
-$s | New-DotnetProject -TemplateName 'xunit3' -o Tests | Add-DotnetProjectReference -Project $lib;
+$s | New-DotnetProject -TemplateName 'xunit3' -o Tests `
+    | Add-DotnetProjectReference -Project $lib;
 ```
-
 
 Or:
 ```pwsh
@@ -268,20 +258,62 @@ dotnet add Tests reference MyProduct.csproj
 dotnet sln add Tests --in-root;
 ```
 
-### Create a project and add a NuGet package reference
+### New-DotnetProject Cmdlet
+
+```text
+    New-DotnetProject [-TemplateName] {xunit | xunit3 | console | classlib | blazor | worker | webapi | winforms}
+    [[-OutputDirectory] <string>] [[-OutputName] <string>] [[-FrameworkName] {net10.0 | net9.0 | net8.0 | standard2.0
+    | standard2.1}] [[-Solution] <DotnetSolution>] [-ShouldGenerateDocumentationFile] [-WhatIf] [-Confirm]
+    [<CommonParameters>]
+
+    New-DotnetProject [-TemplateName] {xunit | xunit3 | console | classlib | blazor | worker | webapi | winforms}
+    [[-OutputDirectory] <string>] [[-OutputName] <string>] [[-FrameworkName] {net10.0 | net9.0 | net8.0 | standard2.0
+    | standard2.1}] [-Solution] <DotnetSolution> [-SolutionFolder <string>] [-ShouldGenerateDocumentationFile]
+    [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+Create a new solution in the current directory and create a new class
+library project within the solution:
 ```pwsh
-New-DotnetProject 'xunit3' Tests | Add-DotnetPackages -PackageId "NSubstitute";
+New-DotnetSolution | New-DotnetProject 'classlib'
+```
+```pwsh
+$s = New-DotnetSolution;
+$s | New-DotnetProject 'classlib';
+```
+Or:
+```pwsh
+New-DotnetSolution | New-DotnetProject -TemplateName 'classlib';
 ```
 
-### Create a project and add multiple NuGet package reference
-
+Equivalent to (in the current directory `MyProduct`):
 ```pwsh
-New-DotnetProject 'xunit3' MyLibrary.Tests | Add-DotnetPackages 'NSubstitute', 'FluentAssertions';
+dotnet new sln;
+dotnet new classlib;
+dotnet sln add MyProduct.csproj --in-root;
 ```
 
-Equivalent to:
-```pwsh
-dotnet new xunit3 -o MyLibrary.Tests
-dotnet add Tests package NSubstitute
-dotnet add Tests package FluentAssertions
+
+### DotnetSolution Class
+
+```text
+   TypeName: Pri.Essentials.DotnetProjects.DotnetSolution
+
+Name      MemberType Definition
+----      ---------- ----------
+Directory Property   string Directory {get;}
+FullPath  Property   string FullPath {get;}
+Name      Property   string Name {get;}
+```
+
+### DotnetProject Class
+
+```text
+   TypeName: Pri.Essentials.DotnetProjects.DotnetProject
+
+Name      MemberType Definition
+----      ---------- ----------
+Directory Property   string Directory {get;}
+FullPath  Property   string FullPath {get;}
+Name      Property   string Name {get;}
+Solution  Property   Pri.Essentials.DotnetProjects.DotnetSolution Solution {get;set;}
 ```

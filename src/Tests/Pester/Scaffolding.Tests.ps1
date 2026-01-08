@@ -37,4 +37,42 @@ Describe 'Scaffolding' {
 			"<ProjectReference Include=""\.\..+(\\|/)$($s.Name).Domain.csproj"" />" `
 			-Path "$outputPath/WebApi/$($s.Name).WebApi.csproj" | Should -Be $true;
 	}
+
+	It 'Creates class library with tests correctly' {
+		$c = New-DotnetProject 'classlib' "$($outputPath)/Domain" "$($productName).Domain";
+		$t = New-DotnetProject 'xunit' "$($outputPath)/Tests" "$($productName).Tests";
+		Add-DotnetProjectReference -Project $c -TargetProject $t;
+		$s = New-DotnetSolution $outputPath;
+		Add-DotnetProject -Solution $s -Project $c;
+		Add-DotnetProject -Solution $s -Project $t;
+
+		select-string `
+			"<ProjectReference Include=""\.\..+(\\|/)$($productName).Domain.csproj"" />" `
+			-Path "$outputPath/Tests/$($productName).Tests.csproj" | Should -Be $true;
+		select-string `
+			"""$($productName).Domain"", ""Domain(\\|/)$($productName).Domain.csproj""" `
+			-Path "$outputPath/$productName.sln" | Should -Be $true;
+		select-string `
+			"""$($productName).Tests"", ""Tests(\\|/)$($productName).Tests.csproj""" `
+			-Path "$outputPath/$productName.sln" | Should -Be $true;
+	}
+
+	It 'Creates class library with tests correctly via pipeing' {
+		$c = New-DotnetProject 'classlib' "$($outputPath)/Domain" "$($productName).Domain";
+		$t = New-DotnetProject 'xunit' "$($outputPath)/Tests" "$($productName).Tests" `
+			| Add-DotnetProjectReference -Project $c;
+		New-DotnetSolution $outputPath `
+			| Add-DotnetProject -Project $c `
+			| Add-DotnetProject -Project $t;
+
+		select-string `
+			"<ProjectReference Include=""\.\..+(\\|/)$($productName).Domain.csproj"" />" `
+			-Path "$outputPath/Tests/$($productName).Tests.csproj" | Should -Be $true;
+		select-string `
+			"""$($productName).Domain"", ""Domain(\\|/)$($productName).Domain.csproj""" `
+			-Path "$outputPath/$productName.sln" | Should -Be $true;
+		select-string `
+			"""$($productName).Tests"", ""Tests(\\|/)$($productName).Tests.csproj""" `
+			-Path "$outputPath/$productName.sln" | Should -Be $true;
+	}
 }
