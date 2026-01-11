@@ -102,7 +102,7 @@ jobs:
           -ModuleVersion '${{ inputs.version }}'
           -Description 'DotNet PowerShell Commands'
           -ProjectUri ([System.Uri]::new('https://github.com/peteraritchie/pri.essentials.DotnetPsCmds#dotnet-powershell-cmdlets'))
-          -Tags @('.NET', 'dotnet', 'dotnet cli')
+          -Tags @('.NET', 'dotnet', 'dotnet-cli')
           -PowerShellVersion '5.1'
           -CmdletsToExport @('Add-DotnetPackage',
           'Add-DotnetPackages',
