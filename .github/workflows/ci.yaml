@@ -30,7 +30,7 @@ on:  # yamllint disable-line rule:truthy
         default: false
 
 env:
-  dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || true }}
+  dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || false }}
 
 jobs:
   # Determining next release version from current release version
