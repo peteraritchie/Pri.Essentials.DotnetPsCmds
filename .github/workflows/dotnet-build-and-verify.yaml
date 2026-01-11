@@ -92,6 +92,7 @@ jobs:
         run: >
           New-ModuleManifest
           -Guid ${{ inputs.module-guid }}
+          -ReleaseNotes = 'Initial pre-release.'
           -Path 'Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1'
           -RootModule 'Pri.Essentials.DotnetPsCmds.dll'
           -RequiredAssemblies 'Pri.Essentials.Abstractions.dll',
@@ -100,7 +101,7 @@ jobs:
           -Company 'Peter Ritchie'
           -ModuleVersion '${{ inputs.version }}'
           -Description 'DotNet PowerShell Commands'
-          -ProjectUri ([System.Uri]::new('https://blog.peterritchie.com/'))
+          -ProjectUri ([System.Uri]::new('https://github.com/peteraritchie/pri.essentials.DotnetPsCmds#dotnet-powershell-cmdlets'))
           -Tags @('.NET', 'dotnet', 'dotnet cli')
           -PowerShellVersion '5.1'
           -CmdletsToExport @('Add-DotnetPackage',
