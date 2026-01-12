@@ -129,6 +129,18 @@ New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests `
     | Add-DotnetPackages NSubstitute;
 ```
 
+Specific package versions are also supported via the `PackageVersion` positional parameter:
+
+```pwsh
+$t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
+$t | Add-DotnetPackage NSubstitute 5.2.0
+```
+Or
+```pwsh
+$t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
+$t | Add-DotnetPackage -PackageId NSubstitute -PackageVersion 5.2.0
+```
+
 ### Scaffolding complete solutions
 
 ```pwsh
@@ -216,6 +228,22 @@ dotnet add Tests package FluentAssertions
 
 ```text
 Add-DotnetProject [-Solution] <DotnetSolution> [-Project] <DotnetProject> [-SolutionFolder <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+### Add-DotnetPackage Cmdlet
+
+Add-DotnetPackage supports package versions.
+
+```text
+Add-DotnetProject [-Solution] <DotnetSolution> [-Project] <DotnetProject> [-SolutionFolder <string>] [-WhatIf]
+[-Confirm] [<CommonParameters>]
+```
+
+Add a specific version of a NuGet package to a project:
+
+```pwsh
+$t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
+$t | Add-DotnetPackage NSubstitute 5.2.0
 ```
 
 ### Add-DotnetProjectReference Cmdlet
