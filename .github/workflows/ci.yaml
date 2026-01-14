@@ -31,6 +31,7 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || false }}
+  release-notes: 'Update to support .NET 1.0.102 change in sln/slx default.'
 
 jobs:
   # Determining next release version from current release version
@@ -55,6 +56,7 @@ jobs:
       dotnet-versions: >-
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
+      release-notes: ${{ env.release-notes }}
       source-directory: ./src
       artifact-name: Module
       module-guid: ${{ vars.PS_MODULE_GUID }}
@@ -89,7 +91,7 @@ jobs:
           tag_name: ${{ steps.create-tag.outputs.tag }}
           release_name: Release ${{ steps.create-tag.outputs.tag }}
           body: |
-            Release created automatically by GitHub Actions.
+            ${{ env.release-notes }}
           draft: false
           prerelease: ${{ env.prerelease }}
 

@@ -1,12 +1,7 @@
 BeforeAll {
-	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
 	$projectType = 'winforms';
 	$projectName = 'MyApp';
 	$outputPath = "$PSScriptRoot/TestProjects/Pri.TheProduct/$projectName";
-}
-
-AfterAll {
-	Remove-Module Pri.Essentials.DotnetPsCmds -Force
 }
 
 Describe 'New-DotnetProject' {

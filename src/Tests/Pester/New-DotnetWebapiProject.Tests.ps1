@@ -1,13 +1,7 @@
 BeforeAll {
-	# Import-Module "$PSScriptRoot/../../DotnetPsCmds/bin/Release/netstandard2.0/Pri.Essentials.DotnetPsCmds.dll";
-	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
 	$projectType = 'webapi';
 	$projectName = 'MyApi';
 	$outputPath = "$PSScriptRoot/TestProjects/Pri.TheProduct/$projectName";
-}
-
-AfterAll {
-	Remove-Module Pri.Essentials.DotnetPsCmds -Force
 }
 
 Describe 'New-DotnetProject' {

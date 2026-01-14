@@ -1,12 +1,7 @@
 ﻿BeforeAll {
-	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
 	$projectType = 'xunit';
 	$projectName = 'Tests';
 	$outputPath = "$PSScriptRoot/TestProjects/Tests/$projectName";
-}
-
-AfterAll {
-	Remove-Module Pri.Essentials.DotnetPsCmds -Force
 }
 
 Describe 'New-DotnetProject' {

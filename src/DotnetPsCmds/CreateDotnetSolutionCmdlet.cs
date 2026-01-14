@@ -33,6 +33,15 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
 	[Alias("Name", "n")]
 	public string? OutputName { get; set; }
 
+	/// <summary>
+	/// Which .NET framework version to use.
+	/// </summary>
+	[Parameter(Mandatory = false,
+		Position = 3,
+		HelpMessage = "Which .NET framework version to use.")]
+	[ValidateSet("net10.0", "net9.0", "net8.0", "standard2.0", "standard2.1")]
+	public string? FrameworkName { get; set; }
+
 	/// <inheritdoc />
 	protected override void BeginProcessing()
 	{
@@ -59,9 +68,7 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
 	protected override void ProcessRecord()
 	{
 		var executor = ShellExecutor.Instance;
-		var command = new CreateSolutionCommand(executor,
-			OutputDirectory!,
-			OutputName!);
+		var command = CreateCommand(executor);
 
 		if (ShouldProcess(command.Target, command.ActionName))
 		{
@@ -92,6 +99,20 @@ public class CreateDotnetSolutionCmdlet : PSCmdlet
 			}
 			WriteObject(new DotnetSolution(OutputDirectory, OutputName));
 		}
+	}
+
+	private CommandBase CreateCommand(IShellExecutor executor)
+	{
+		if(string.IsNullOrWhiteSpace(FrameworkName))
+		{
+			return new CreateSolutionFileCommand(executor,
+				OutputDirectory!,
+				OutputName!);
+		}
+		return new CreateSolutionCommand(executor,
+			OutputDirectory!,
+			OutputName!,
+			FrameworkName);
 	}
 
 	/// <summary>
