@@ -31,9 +31,21 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   dry-run: ${{ (github.event.inputs.dry-run != '' && inputs.dry-run == 'true') && true || false }}
-  release-notes: 'Update to support .NET 1.0.102 change in sln/slx default.'
 
 jobs:
+  determine-release-notes:
+    name: Determine Release Notes
+    runs-on: ubuntu-latest
+    outputs:
+      release-notes: ${{ steps.release-notes.outputs.release-notes }}
+    permissions:
+      contents: write  # to be able to publish a GitHub release
+    steps:
+      - name: Determine release notes
+        id: release-notes
+        run: |
+          echo "release-notes=Update to support .NET 1.0.102 change in sln/slx default." >> $GITHUB_OUTPUT
+
   # Determining next release version from current release version
   determine-next-release-version:
     name: Determine next Release version
@@ -46,7 +58,7 @@ jobs:
   # CI: build and verify tests
   build-and-verify:
     name: Build and verify tests
-    needs: determine-next-release-version
+    needs: [determine-next-release-version, determine-release-notes]
     uses: ./.github/workflows/dotnet-build-and-verify.yaml
     permissions:
       contents: read  # Required for checking out the code
@@ -56,7 +68,7 @@ jobs:
       dotnet-versions: >-
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
-      release-notes: ${{ env.release-notes }}
+      release-notes: ${{ needs.determine-release-notes.outputs.release-notes }}
       source-directory: ./src
       artifact-name: Module
       module-guid: ${{ vars.PS_MODULE_GUID }}
@@ -64,7 +76,10 @@ jobs:
   # release
   release:
     name: Release module
-    needs: [build-and-verify, determine-next-release-version]
+    needs:
+      - build-and-verify
+      - determine-next-release-version
+      - determine-release-notes
     runs-on: ubuntu-latest
     permissions:
       contents: write  # to be able to publish a GitHub release
@@ -91,7 +106,7 @@ jobs:
           tag_name: ${{ steps.create-tag.outputs.tag }}
           release_name: Release ${{ steps.create-tag.outputs.tag }}
           body: |
-            ${{ env.release-notes }}
+            ${{ needs.determine-release-notes.outputs.release-notes }}
           draft: false
           prerelease: ${{ env.prerelease }}
 
