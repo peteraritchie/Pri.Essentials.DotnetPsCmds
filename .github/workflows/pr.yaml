@@ -13,21 +13,6 @@ on:  # yamllint disable-line rule:truthy
   workflow_dispatch:
 
 jobs:
-  debug:
-    name: Debug Info
-    runs-on: ubuntu-latest
-    if: vars.DEBUG == 'true'
-    steps:
-      - name: Print GitHub object
-        run: |
-          echo "${{ toJSON(github) }}" > debug.txt
-      - name: Upload debug info
-        uses: actions/upload-artifact@v6
-        with:
-          name: debug-info
-          path: debug.txt
-
-
   # Determining next release version from current release version
   determine-next-release-version:
     name: Determine next Release version
