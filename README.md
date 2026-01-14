@@ -5,6 +5,8 @@
 [![CI](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml)
 [![CodeQL](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql)
 ![GitHub License](https://img.shields.io/github/license/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![GitHub Repo stars](https://img.shields.io/github/stars/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)
+![GitHub Repo forks](https://img.shields.io/github/forks/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)
 
 ## Contents
 - [Getting Started](#getting-started)

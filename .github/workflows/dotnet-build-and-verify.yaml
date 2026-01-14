@@ -20,6 +20,10 @@ on:  # yamllint disable-line rule:truthy
         description: "Package version"
         required: true
         type: string
+      release-notes:
+        description: "Release notes"
+        required: true
+        type: string
       source-directory:
         description: "Relative directory where source code is located"
         required: true
@@ -92,7 +96,7 @@ jobs:
         run: >
           New-ModuleManifest
           -Guid ${{ inputs.module-guid }}
-          -ReleaseNotes 'Initial pre-release.'
+          -ReleaseNotes '${{ inputs.release-notes }}'
           -Path 'Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1'
           -RootModule 'Pri.Essentials.DotnetPsCmds.dll'
           -RequiredAssemblies 'Pri.Essentials.Abstractions.dll',

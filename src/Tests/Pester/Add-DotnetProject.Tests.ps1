@@ -1,11 +1,6 @@
 ﻿BeforeAll {
-	Import-Module "$PSScriptRoot/../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1";
 	$productName = 'Pri.TheProduct';
 	$outputPath = "$PSScriptRoot/TestProjects/$productName";
-}
-
-AfterAll {
-	Remove-Module Pri.Essentials.DotnetPsCmds -Force
 }
 
 Describe 'Add-DotnetProject' {

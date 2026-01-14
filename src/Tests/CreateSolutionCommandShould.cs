@@ -6,7 +6,7 @@ using Pri.Essentials.DotnetProjects.Commands;
 namespace Tests;
 
 public partial class CreateSolutionCommandShould
-	: CommandTestingBase<CreateSolutionCommand>
+	: CommandTestingBase<CreateSolutionFileCommand>
 {
 	public CreateSolutionCommandShould()
 		: base(Substitute.For<IShellExecutor>())
@@ -17,9 +17,9 @@ public partial class CreateSolutionCommandShould
 		sut = InitializeSut(directory, spyExecutor);
 	}
 
-	private static CreateSolutionCommand InitializeSut(string solutionDirectory, IShellExecutor shellExecutor)
+	private static CreateSolutionFileCommand InitializeSut(string solutionDirectory, IShellExecutor shellExecutor)
 	{
-		return new CreateSolutionCommand(shellExecutor: shellExecutor,
+		return new CreateSolutionFileCommand(shellExecutor: shellExecutor,
 			outputDirectory: solutionDirectory,
 			outputName: "MySolution");
 	}

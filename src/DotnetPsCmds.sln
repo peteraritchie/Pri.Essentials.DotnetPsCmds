@@ -21,7 +21,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pester", "Pester", "{868372A1-4B88-42B8-8FAF-0A298C49A50A}"
 	ProjectSection(SolutionItems) = preProject
-		Tests\Pester\Add-DotnetClassLibProject.Tests.ps1 = Tests\Pester\Add-DotnetClassLibProject.Tests.ps1
+		Tests\Pester\Add-DotnetPackage.Tests.ps1 = Tests\Pester\Add-DotnetPackage.Tests.ps1
+		Tests\Pester\Add-DotnetPackages.Tests.ps1 = Tests\Pester\Add-DotnetPackages.Tests.ps1
+		Tests\Pester\Add-DotnetProject.Tests.ps1 = Tests\Pester\Add-DotnetProject.Tests.ps1
+		Tests\Pester\Add-DotnetProjectReference.Tests.ps1 = Tests\Pester\Add-DotnetProjectReference.Tests.ps1
+		Tests\Pester\New-DotnetBlazorProject.Tests.ps1 = Tests\Pester\New-DotnetBlazorProject.Tests.ps1
+		Tests\Pester\New-DotnetClassLibProject.Tests.ps1 = Tests\Pester\New-DotnetClassLibProject.Tests.ps1
+		Tests\Pester\New-DotnetConsoleProject.Tests.ps1 = Tests\Pester\New-DotnetConsoleProject.Tests.ps1
+		Tests\Pester\New-DotnetSolution.Tests.ps1 = Tests\Pester\New-DotnetSolution.Tests.ps1
+		Tests\Pester\New-DotnetWebapiProject.Tests.ps1 = Tests\Pester\New-DotnetWebapiProject.Tests.ps1
+		Tests\Pester\New-DotnetWinformsProject.Tests.ps1 = Tests\Pester\New-DotnetWinformsProject.Tests.ps1
+		Tests\Pester\New-DotnetWorkerProject.Tests.ps1 = Tests\Pester\New-DotnetWorkerProject.Tests.ps1
+		Tests\Pester\New-DotnetXunit3Project.Tests.ps1 = Tests\Pester\New-DotnetXunit3Project.Tests.ps1
+		Tests\Pester\New-DotnetXunitProject.Tests.ps1 = Tests\Pester\New-DotnetXunitProject.Tests.ps1
+		Tests\Pester\Scaffolding.Tests.ps1 = Tests\Pester\Scaffolding.Tests.ps1
 	EndProjectSection
 EndProject
 Global
