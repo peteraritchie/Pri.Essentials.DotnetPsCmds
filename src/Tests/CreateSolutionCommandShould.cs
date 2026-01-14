@@ -56,6 +56,6 @@ public partial class CreateSolutionCommandShould
 		Assert.Equal("MySolution", match.Groups[4].Value);
 	}
 
-	[GeneratedRegex(@"^(\S+ \S+) (\S+) -o (\S+) -n (\S+)$")]
+	[GeneratedRegex(@"^(\S+ \S+) (\S+) -f sln -o (\S+) -n (\S+)$")]
 	private static partial Regex GroupNameAndDirRegex();
 }
