@@ -47,6 +47,7 @@ jobs:
         ${{ vars.CONFIGURATION != '' && vars.CONFIGURATION || 'Release' }}
       dotnet-versions: >-
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
+      release-notes: Pull request
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
       artifact-name: Module
