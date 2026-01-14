@@ -1,5 +1,11 @@
 # Dotnet PowerShell Cmdlets
 
+![GitHub Release](https://img.shields.io/github/v/release/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Pri.Essentials.DotnetPsCmds)
+[![CI](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml)
+[![CodeQL](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql)
+![GitHub License](https://img.shields.io/github/license/peteraritchie/Pri.Essentials.DotnetPsCmds)
+
 ## Contents
 - [Getting Started](#getting-started)
 - [New-DotnetSolution](#create-a-net-solution)
