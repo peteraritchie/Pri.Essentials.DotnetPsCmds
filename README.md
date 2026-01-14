@@ -351,3 +351,10 @@ FullPath  Property   string FullPath {get;}
 Name      Property   string Name {get;}
 Solution  Property   Pri.Essentials.DotnetProjects.DotnetSolution Solution {get;set;}
 ```
+
+---
+![Repo Size](https://img.shields.io/github/repo-size/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![Languages](https://img.shields.io/github/languages/count/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![Primary Language](https://img.shields.io/github/languages/top/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![Code Size](https://img.shields.io/github/languages/code-size/peteraritchie/Pri.Essentials.DotnetPsCmds)
+![downloads](https://img.shields.io/github/downloads/peteraritchie/Pri.Essentials.DotnetPsCmds/total)
