@@ -130,6 +130,7 @@ jobs:
         shell: pwsh
         run: |
           cd ./Tests/Pester;
+          Import-Module ../../Pri.Essentials.DotnetPsCmds/Pri.Essentials.DotnetPsCmds.psd1;
           Import-Module Pester;
           $config = New-PesterConfiguration;
           $config.TestResult.OutputPath = 'pester-results.xml';
