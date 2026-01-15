@@ -1,12 +1,13 @@
 # Dotnet PowerShell Cmdlets
 
-[![GitHub Release](https://img.shields.io/github/v/release/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/releases)
-[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Pri.Essentials.DotnetPsCmds)](https://www.powershellgallery.com/packages/Pri.Essentials.DotnetPsCmds)
-[![CI](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml)
-[![CodeQL](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql)
-[![GitHub License](https://img.shields.io/github/license/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds?tab=MIT-1-ov-file#readme)
-[![GitHub Repo stars](https://img.shields.io/github/stars/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/stargazers)
-[![GitHub Repo forks](https://img.shields.io/github/forks/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/forks)
+[![GitHub Release](https://img.shields.io/github/v/release/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/releases "# of times GitHub release was downloaded.")
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Pri.Essentials.DotnetPsCmds)](https://www.powershellgallery.com/packages/Pri.Essentials.DotnetPsCmds "Current version of Pri.Essentials.DotnetPsCmds on PowerShell Gallery")
+[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/Pri.Essentials.DotnetPsCmds)](https://www.powershellgallery.com/packages/Pri.Essentials.DotnetPsCmds "# of times Pri.Essentials.DotnetPsCmds has been downloaded from the PowerShell Gallery")
+[![CI](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/ci.yaml "Status of the last workflow run.")
+[![CodeQL](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/actions/workflows/github-code-scanning/codeql "Status of the last CodeQL scan.")
+[![GitHub License](https://img.shields.io/github/license/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds?tab=MIT-1-ov-file#readme "This project is license under the MIT license.")
+[![GitHub Repo stars](https://img.shields.io/github/stars/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/stargazers "# of people who have starred this repo.")
+[![GitHub Repo forks](https://img.shields.io/github/forks/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/forks "# of forks of this repo.")
 
 ## Contents
 - [Getting Started](#getting-started)
@@ -355,8 +356,8 @@ Solution  Property   Pri.Essentials.DotnetProjects.DotnetSolution Solution {get;
 ```
 
 ---
-![Repo Size](https://img.shields.io/github/repo-size/peteraritchie/Pri.Essentials.DotnetPsCmds)
-![Languages](https://img.shields.io/github/languages/count/peteraritchie/Pri.Essentials.DotnetPsCmds)
-![Primary Language](https://img.shields.io/github/languages/top/peteraritchie/Pri.Essentials.DotnetPsCmds)
-![Code Size](https://img.shields.io/github/languages/code-size/peteraritchie/Pri.Essentials.DotnetPsCmds)
-![downloads](https://img.shields.io/github/downloads/peteraritchie/Pri.Essentials.DotnetPsCmds/total)
+[![Repo Size](https://img.shields.io/github/repo-size/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds)
+[![Languages](https://img.shields.io/github/languages/count/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds)
+[![Primary Language](https://img.shields.io/github/languages/top/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds)
+[![Code Size](https://img.shields.io/github/languages/code-size/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds)
+[![downloads](https://img.shields.io/github/downloads/peteraritchie/Pri.Essentials.DotnetPsCmds/total)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds)
