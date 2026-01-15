@@ -1,7 +1,7 @@
 ---
 name: PR Checks
 run-name: >
-  Verify build and test - '${{ github.event.pull_request.title }}',
+  PR: Verify build and test - '${{ github.event.pull_request.title }}',
   from ${{ github.ref }} by @${{ github.actor }}
 
 on:  # yamllint disable-line rule:truthy
