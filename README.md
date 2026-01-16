@@ -7,6 +7,7 @@
 [![GitHub License](https://img.shields.io/github/license/peteraritchie/Pri.Essentials.DotnetPsCmds)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds?tab=MIT-1-ov-file#readme)
 [![GitHub Repo stars](https://img.shields.io/github/stars/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/stargazers)
 [![GitHub Repo forks](https://img.shields.io/github/forks/peteraritchie/Pri.Essentials.DotnetPsCmds?style=flat)](https://github.com/peteraritchie/Pri.Essentials.DotnetPsCmds/forks)
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.codetabs.com%2Fv1%2Floc%2F%3Fgithub%3Dpeteraritchie%2FPri.Essentials.DotnetPsCmds&query=%24%5B0%5D.linesOfCode.&label=LOC)](https://github.com/peteraritchie/Pri.ProductivityExtensions.Source)
 
 ## Contents
 - [Getting Started](#getting-started)
