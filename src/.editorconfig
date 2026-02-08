@@ -27,6 +27,9 @@ insert_final_newline = false
 #### .NET Coding Conventions ####
 [*.{cs,vb}]
 
+# set `Using directive is unnecessary.` diagnostic to warning instead of suggestion
+dotnet_diagnostic.IDE0005.severity = warning
+
 # Organize usings
 dotnet_separate_import_directive_groups = true
 dotnet_sort_system_directives_first = true

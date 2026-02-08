@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml.Linq;
 
 using Pri.Essentials.Abstractions;
 
@@ -6,6 +7,7 @@ namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
 /// WIP
+/// Supports Add-DotnetProject and New-DotnetProject.
 /// </summary>
 /// <remarks>
 /// dotnet reference add --project .\UI\ .\Lib\ .NET 10+
@@ -41,11 +43,21 @@ public class AddProjectToSolutionCommand(
 			// Update file options
 			if (ShouldGenerateDocumentationFile is not null && ShouldGenerateDocumentationFile == true)
 			{
-				using Stream fs = fileSystem.FileOpen(project.FullPath,
+				using Stream stream = fileSystem.FileOpen(project.FullPath,
 					FileMode.Open,
 					FileAccess.ReadWrite,
 					FileShare.None);
-				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(fs);
+				var doc = XDocument.Load(stream);
+				// TODO: test this again with use of instance
+				// VisualStudioProjectConfigurationService
+
+				var projectConfigurationService = new VisualStudioProjectConfigurationService(doc);
+
+				projectConfigurationService.SetGenerateDocumentationFile();
+
+				// Reset position before saving
+				stream.Position = 0;
+				doc.Save(stream);
 			}
 		}
 		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)

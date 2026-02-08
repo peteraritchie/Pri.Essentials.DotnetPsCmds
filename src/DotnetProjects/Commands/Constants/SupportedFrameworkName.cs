@@ -71,4 +71,15 @@ public sealed class SupportedFrameworkName
 	{
 		return All.TryGetValue(potentialName, out result);
 	}
+
+	/// <summary>
+	/// Try to get a SupportedFrameworkName object by name
+	/// </summary>
+	/// <param name="nameText"></param>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	public static bool TryFind(string nameText, out SupportedFrameworkName name)
+	{
+		return All.TryGetValue(nameText, out name);
+	}
 }

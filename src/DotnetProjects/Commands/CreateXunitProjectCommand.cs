@@ -6,14 +6,17 @@ using Pri.Essentials.DotnetProjects.Commands.Constants;
 namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
-/// Represents a command to create a new .NET project based on a specified template and framework.
+/// Represents a command to create a new .NET project based on a
+/// specified template and framework.
 /// </summary>
 /// <remarks>
-/// This command is responsible for generating a .NET project file in the specified output directory
-/// with the provided name, using the given project template and framework.
+/// This command is responsible for generating a .NET project file in
+/// the specified output directory with the provided name, using the given
+/// project template and framework.
 /// </remarks>
 /// <param name="shellExecutor">
-/// The shell executor used to execute the underlying shell commands required for project creation.
+/// The shell executor used to execute the underlying shell commands required
+/// for project creation.
 /// </param>
 /// <param name="outputDirectory">
 /// The directory where the new project will be created.

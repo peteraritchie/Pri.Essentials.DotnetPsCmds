@@ -26,6 +26,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	[Parameter(Mandatory = true, Position = 0,
 		HelpMessage = "What project template to use "
 		+ "to generate the project.")]
+	// ReSharper disable once StringLiteralTypo
 	[ValidateSet("xunit", "xunit3", "console", "classlib", "blazor",
 		"worker", "webapi", "winforms")]
 	public string? TemplateName{ get; set; }
@@ -38,6 +39,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 			"What directory the project will be generated to. If omitted"
 		+ " the current directory will be used.")]
 	[Alias("Path", "o")]
+	// ReSharper disable once MemberCanBePrivate.Global
 	public string? OutputDirectory { get; set; }
 
 	/// <summary>
@@ -48,6 +50,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		HelpMessage = "The name of the project file. If omitted, the"
 		+ " parent directory name will be used.")]
 	[Alias("Name", "n")]
+	// ReSharper disable once MemberCanBePrivate.Global
 	public string? OutputName{ get; set; }
 
 	/// <summary>
@@ -59,6 +62,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		HelpMessage = "Which .NET framework version to use. If omitted, "
 		+ ".NET 10 will be used.")]
 	[ValidateSet("net10.0", "net9.0","net8.0","standard2.0","standard2.1")]
+	// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
 	public string? FrameworkName { get; set; } = SupportedFrameworkName.Net10;
 
 	/// <summary>
@@ -88,6 +92,7 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 	[Parameter(Mandatory = false,
 		HelpMessage = "Switch parameter to indicate whether to "
 		+ "generate documentation file.")]
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
 	public SwitchParameter ShouldGenerateDocumentationFile { get; set; }
 
 	/// <inheritdoc />

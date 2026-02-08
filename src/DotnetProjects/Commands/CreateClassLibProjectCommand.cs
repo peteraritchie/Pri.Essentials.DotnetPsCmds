@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using System.Xml.Linq;
 
 using Pri.Essentials.Abstractions;
 using Pri.Essentials.DotnetProjects.Commands.Constants;
@@ -7,17 +8,33 @@ using Pri.Essentials.DotnetProjects.Commands.Constants;
 namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
-/// Represents a command that creates a new .NET class library project using the specified parameters.
+/// Represents a command that creates a new .NET class library project using
+/// the specified parameters.
 /// </summary>
-/// <remarks>This command automates the creation of a .NET class library project by invoking the appropriate
-/// 'dotnet new classlib' command. After project creation, it attempts to remove the default 'Class1.cs' file if it
-/// exists. This class is typically used in build automation or tooling scenarios where programmatic project creation is
+/// <remarks>This command automates the creation of a .NET class library
+/// project by invoking the appropriate 'dotnet new classlib' command.
+/// After project creation, it attempts to remove the default 'Class1.cs'
+/// file if it exists. This class is typically used in build automation or
+/// tooling scenarios where programmatic project creation is
 /// required.</remarks>
-/// <param name="shellExecutor">The shell executor used to run the project creation command.</param>
-/// <param name="outputDirectory">The directory in which to create the new class library project. If empty or null, the current directory is used.</param>
-/// <param name="outputName">The name to assign to the new project. If empty or null, the default project name is used.</param>
-/// <param name="frameworkName">The target framework for the new class library project.</param>
-/// <param name="fileSystem">An optional file system abstraction used for file operations. If null, the default file system is used.</param>
+/// <param name="shellExecutor">
+/// The shell executor used to run the project creation command.
+/// </param>
+/// <param name="outputDirectory">
+/// The directory in which to create the new class library project. If empty
+/// or null, the current directory is used.
+/// </param>
+/// <param name="outputName">
+/// The name to assign to the new project. If empty or null, the default
+/// project name is used.
+/// </param>
+/// <param name="frameworkName">
+/// The target framework for the new class library project.
+/// </param>
+/// <param name="fileSystem">
+/// An optional file system abstraction used for file operations. If null,
+/// the default file system is used.
+/// </param>
 public class CreateClassLibProjectCommand(
 	IShellExecutor shellExecutor,
 	string outputDirectory,
@@ -50,14 +67,27 @@ public class CreateClassLibProjectCommand(
 				TryDelete(Path.Combine(outputDirectory, "Class1.cs"));
 			}
 
+			// TODO: test this again with use of instance
+			// VisualStudioProjectConfigurationService
+
 			// add GenerateDocumentationFile true to the csproj file if needed
 			if (ShouldGenerateDocumentationFile is true)
 			{
-				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(stream);
+				var doc = XDocument.Load(stream);
+				var projectConfigurationService =
+					new VisualStudioProjectConfigurationService(doc);
+
+				projectConfigurationService.SetGenerateDocumentationFile();
+
+				// Reset position before saving
+				stream.Position = 0;
+				doc.Save(stream);
 			}
 		}
 
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		return new ShellOperationResult(ExitCode: result.ExitCode,
+			OutputText: result.StandardOutputText,
+			ErrorText: result.StandardErrorText)
 		{
 			OperationText = commandLine
 		};

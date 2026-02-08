@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml.Linq;
 
 using Pri.Essentials.Abstractions;
 using Pri.Essentials.DotnetProjects.Commands.Constants;
@@ -6,14 +7,17 @@ using Pri.Essentials.DotnetProjects.Commands.Constants;
 namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
-/// Represents a command to create a new .NET project based on a specified template and framework.
+/// Represents a command to create a new .NET project based on a
+/// specified template and framework.
 /// </summary>
 /// <remarks>
-/// This command is responsible for generating a .NET project file in the specified output directory
-/// with the provided name, using the given project template and framework.
+/// This command is responsible for generating a .NET project file in
+/// the specified output directory with the provided name, using the given
+/// project template and framework.
 /// </remarks>
 /// <param name="shellExecutor">
-/// The shell executor used to execute the underlying shell commands required for project creation.
+/// The shell executor used to execute the underlying shell commands required
+/// for project creation.
 /// </param>
 /// <param name="templateName">
 /// The name of the project template to use for creating the .NET project.
@@ -53,13 +57,26 @@ public class CreateProjectCommand(
 				FileMode.Open,
 				FileAccess.ReadWrite,
 				FileShare.None);
+
+			// TODO: test this again with use of instance
+			// VisualStudioProjectConfigurationService
+
 			// add GenerateDocumentationFile true to the csproj file if needed
 			if (ShouldGenerateDocumentationFile is true)
 			{
-				VisualStudioProjectConfigurationService.EnableGenerateDocumentationFile(stream);
+				var doc = XDocument.Load(stream);
+				var projectConfigurationService = new VisualStudioProjectConfigurationService(doc);
+
+				projectConfigurationService.SetGenerateDocumentationFile();
+
+				// Reset position before saving
+				stream.Position = 0;
+				doc.Save(stream);
 			}
 		}
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		return new ShellOperationResult(ExitCode: result.ExitCode,
+			OutputText: result.StandardOutputText,
+			ErrorText: result.StandardErrorText)
 		{
 			OperationText = commandLine
 		};
@@ -68,8 +85,12 @@ public class CreateProjectCommand(
 	/// <inheritdoc />
 	protected override string BuildCommandLine()
 	{
-		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
-		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
+		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory)
+			? string.Empty
+			: $" -o {outputDirectory}";
+		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory)
+			? string.Empty
+			: $" -n {outputName}";
 
 		// TODO: add something to delete unittest1.cs with xunit projects?
 		return $"dotnet new {templateName}{outputDirectoryOption}{outputNameOption} -f {FrameworkName}";

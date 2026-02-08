@@ -1,9 +1,131 @@
 ﻿using System.Runtime.InteropServices;
+using System.Xml.Linq;
+using System.Xml.XPath;
+
+using Pri.Essentials.DotnetProjects;
 
 namespace Tests;
 
 public class Assumptions
 {
+	[Fact]
+	void XPathAssumptions()
+	{
+		var xmlText = """
+			<Project Sdk="Microsoft.NET.Sdk">
+
+			  <PropertyGroup>
+			    <TargetFramework>netstandard2.0</TargetFramework>
+			    <LangVersion>latest</LangVersion>
+			    <Nullable>enable</Nullable>
+			    <AssemblyName>Pri.Essentials.DotnetPsCmds</AssemblyName>
+			    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+			    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+			  </PropertyGroup>
+
+			  <ItemGroup>
+			    <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
+			      <PrivateAssets>All</PrivateAssets>
+			    </PackageReference>
+			  </ItemGroup>
+
+			  <ItemGroup>
+					<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.SuppressMessageAttribute">
+					  <_Parameter1>Style</_Parameter1>
+					  <_Parameter2>IDE1006:Naming Styles</_Parameter2>
+					  <Justification>&lt;Pending&gt;</Justification>
+					  <Scope>module</Scope>
+					</AssemblyAttribute>
+			  </ItemGroup>
+			</Project>
+			""";
+		var doc = XDocument.Parse(xmlText);
+		var projectElement = doc.Root!;
+
+		var category = "Style";
+		var checkId = "IDE1006:Naming Styles";
+		var justification = "<Pending>";
+		var scope = "module";
+		var existingElement = projectElement.XPathSelectElement(
+			$"./ItemGroup[./AssemblyAttribute]");
+		existingElement = projectElement.XPathSelectElement(
+			$"./ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessageAttribute' and _Parameter1='{category}' and _Parameter2 = '{checkId}' and Justification = '{justification}' and Scope = '{scope}']]");
+		// /Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessage' and _Parameter1='{category}' and _Parameter2 = '{checkId' and Justification = '{justification}' and Scope = '{scope']]
+		// /Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessage']]
+		// /Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessage' and _Parameter1='Style' and _Parameter2 = 'IDE1006:Naming Styles' and Justification = '<Pending>' and Scope = 'module']]
+		//./        ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessage' and _Parameter1='Style' and _Parameter2 = 'IDE1006:Naming Styles' and Justification = '<Pending>' and Scope = 'module']]
+		// /Project/ItemGroup[AssemblyAttribute/_Parameter1 = '{category}' and AssemblyAttribute/_Parameter2 = '{checkId}' and AssemblyAttribute/Justification = '{justification}' and AssemblyAttribute/Scope = '{scope}']");
+		Assert.NotNull(existingElement);
+	}
+
+	[Fact]
+	void CreateItemGroup()
+	{
+		var doc = XDocument.Parse("""
+		                          <Project Sdk="Microsoft.NET.Sdk">
+		                            <PropertyGroup>
+		                              <TargetFramework>netstandard2.0</TargetFramework>
+		                              <LangVersion>latest</LangVersion>
+		                              <Nullable>enable</Nullable>
+		                              <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		                            </PropertyGroup>
+		                          </Project>
+		                          """);
+		var projectElement = doc.XPathSelectElement($"/{ProjectElementNames.Project}");
+		Assert.NotNull(projectElement);
+
+	}
+
+	[Fact]
+	void FindElementInItemGroup()
+	{
+		var doc = XDocument.Parse("""
+		                          <Project Sdk="Microsoft.NET.Sdk">
+		                            <PropertyGroup>
+		                              <TargetFramework>netstandard2.0</TargetFramework>
+		                              <LangVersion>latest</LangVersion>
+		                              <Nullable>enable</Nullable>
+		                              <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		                            </PropertyGroup>
+		                            <ItemGroup>
+		                          	  <InternalsVisibleTo>Tests</InternalsVisibleTo>
+		                          	</ItemGroup>
+		                          </Project>
+		                          """);
+		var element = doc.XPathSelectElement($"/{ProjectElementNames.Project}/{ProjectElementNames.ItemGroup}");
+		Assert.NotNull(element);
+		element = doc.XPathSelectElement($"/{ProjectElementNames.Project}/{ProjectElementNames.ItemGroup}/{ProjectElementNames.InternalsVisibleToName}");
+		Assert.NotNull(element);
+		element = element.Parent;
+		Assert.NotNull(element);
+		Assert.Equal("ItemGroup", element.Name);
+	}
+
+	[Fact]
+	void CreateCollectionOfDelegatesToExecute()
+	{
+		var doc = XDocument.Parse("""
+		                          <Project Sdk="Microsoft.NET.Sdk">
+		                            <PropertyGroup>
+		                              <TargetFramework>netstandard2.0</TargetFramework>
+		                              <LangVersion>latest</LangVersion>
+		                              <Nullable>enable</Nullable>
+		                              <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+		                            </PropertyGroup>
+		                          </Project>
+		                          """);
+		var service = new VisualStudioProjectConfigurationService(doc);
+		Dictionary<string, Action> actions = [];
+		actions["name"]= () => service.SetAssemblyName("something");
+		foreach (var (name, action) in actions) {
+			action();
+		}
+
+		var element = doc.XPathSelectElement("/Project/PropertyGroup/AssemblyName");
+		Assert.NotNull(element);
+		Assert.Equal("something", element.Value);
+	}
+
 	/// <summary>
 	/// Searches parent directories from the current working directory upward until a file named "global.json" is found or
 	/// the root directory is reached. Asserts that the file exists in one of the directories traversed.
