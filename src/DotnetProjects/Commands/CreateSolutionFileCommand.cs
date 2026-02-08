@@ -3,12 +3,23 @@
 namespace Pri.Essentials.DotnetProjects.Commands;
 
 /// <summary>
-/// Represents a command that creates a new .NET solution file using the 'dotnet new sln' command.
+/// Represents a command that creates a new .NET solution file
+/// using the 'dotnet new sln' command.
 /// </summary>
-/// <param name="shellExecutor">The shell executor used to run command-line operations.</param>
-/// <param name="outputDirectory">The directory in which to create the solution file. If null or empty, the current directory is used.</param>
-/// <param name="outputName">The name of the solution file to create.</param>
-public class CreateSolutionFileCommand(IShellExecutor shellExecutor, string outputDirectory, string outputName)
+/// <param name="shellExecutor">
+/// The shell executor used to run command-line operations.
+/// </param>
+/// <param name="outputDirectory">
+/// The directory in which to create the solution file. If null or empty,
+/// the current directory is used.
+/// </param>
+/// <param name="outputName">
+/// The name of the solution file to create.
+/// </param>
+public class CreateSolutionFileCommand(
+	IShellExecutor shellExecutor,
+	string outputDirectory,
+	string outputName)
 	: CommandBase(shellExecutor)
 {
 	/// <inheritdoc />
@@ -16,7 +27,9 @@ public class CreateSolutionFileCommand(IShellExecutor shellExecutor, string outp
 	{
 		var commandLine = BuildCommandLine();
 		var result = shellExecutor.Execute(commandLine);
-		return new ShellOperationResult(result.ExitCode, result.StandardOutputText, result.StandardErrorText)
+		return new ShellOperationResult(ExitCode: result.ExitCode,
+			OutputText: result.StandardOutputText,
+			ErrorText: result.StandardErrorText)
 		{
 			OperationText = commandLine
 		};
@@ -24,8 +37,12 @@ public class CreateSolutionFileCommand(IShellExecutor shellExecutor, string outp
 
 	private string BuildCommandLine()
 	{
-		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -o {outputDirectory}";
-		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory) ? string.Empty : $" -n {outputName}";
+		var outputDirectoryOption = string.IsNullOrWhiteSpace(outputDirectory)
+			? string.Empty
+			: $" -o {outputDirectory}";
+		var outputNameOption = string.IsNullOrWhiteSpace(outputDirectory)
+			? string.Empty
+			: $" -n {outputName}";
 
 		return $"dotnet new sln -f sln{outputDirectoryOption}{outputNameOption}";
 	}
@@ -41,18 +58,35 @@ public class CreateSolutionFileCommand(IShellExecutor shellExecutor, string outp
 /// Represents a command that creates a new .NET solution including a sln file,
 /// global.json, etc.
 /// </summary>
-/// <param name="shellExecutor">The shell executor used to run command-line operations.</param>
-/// <param name="outputDirectory">The directory in which to create the solution file. If null or empty, the current directory is used.</param>
-/// <param name="outputName">The name of the solution file to create.</param>
-public class CreateSolutionCommand(IShellExecutor shellExecutor, string outputDirectory, string outputName, string? frameworkName)
+/// <param name="shellExecutor">
+/// The shell executor used to run command-line operations.
+/// </param>
+/// <param name="outputDirectory">
+/// The directory in which to create the solution file. If null or empty,
+/// the current directory is used.
+/// </param>
+/// <param name="outputName">
+/// The name of the solution file to create.
+/// </param>
+/// <param name="frameworkName">
+/// The framework name to use for the TargetFramework project property
+/// </param>
+public class CreateSolutionCommand(
+	IShellExecutor shellExecutor,
+	string outputDirectory,
+	string outputName,
+	string? frameworkName)
 	: CommandBase(shellExecutor)
 {
 	/// <inheritdoc />
 	public override Result Execute()
 	{
-		var createSolutionFileCommand = new CreateSolutionFileCommand(shellExecutor, outputDirectory, outputName);
+		var createSolutionFileCommand =
+			new CreateSolutionFileCommand(shellExecutor, outputDirectory, outputName);
 		var firstResult = createSolutionFileCommand.Execute() as ShellOperationResult;
-		return new ShellOperationResult(firstResult.ExitCode, firstResult.OutputText, firstResult.ErrorText)
+		return new ShellOperationResult(ExitCode: firstResult.ExitCode,
+			OutputText: firstResult.OutputText,
+			ErrorText: firstResult.ErrorText)
 		{
 			OperationText = firstResult.OperationText,
 		};

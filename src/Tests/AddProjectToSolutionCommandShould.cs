@@ -1,13 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Text.RegularExpressions;
 
+using Pri.Essentials.Abstractions;
 using Pri.Essentials.DotnetProjects;
 using Pri.Essentials.DotnetProjects.Commands;
+
+using Tests.Mocks;
 
 namespace Tests;
 
 public partial class AddProjectToSolutionCommandShould
 	: CommandTestingBase<AddProjectToSolutionCommand>
 {
+	private readonly SpyMemoryStream memoryStream = new();
+
 	public AddProjectToSolutionCommandShould()
 		: base(Substitute.For<IShellExecutor>())
 	{
@@ -18,15 +24,45 @@ public partial class AddProjectToSolutionCommandShould
 		var fakeProject = new DotnetProject(
 			Path.Combine(directory, "testing"),
 			name: "testing");
+		IFileSystem mockFileSystem = Substitute.For<IFileSystem>();
+		memoryStream.Write("""
+		                   <Project Sdk="Microsoft.NET.Sdk">
+		                     <PropertyGroup>
+		                       <TargetFramework>netstandard2.0</TargetFramework>
+		                       <LangVersion>latest</LangVersion>
+		                       <Nullable>enable</Nullable>
+		                     </PropertyGroup>
+		                   </Project>
+		                   """u8.ToArray());
+		memoryStream.Position = 0;
+		mockFileSystem.FileOpen(path: Arg.Any<string>(),
+				fileMode: Arg.Any<FileMode>(),
+				fileAccess: Arg.Any<FileAccess>(),
+				fileShare: Arg.Any<FileShare>())
+			.Returns(memoryStream);
 		sut = new AddProjectToSolutionCommand(spyExecutor,
 			fakeSolution,
 			fakeProject,
-			solutionFolder: null);
+			solutionFolder: null, mockFileSystem);
 	}
 
 	[Fact]
 	public void HaveCorrectCommand()
 	{
+		var result = sut!.Execute();
+		Assert.True(result.IsSuccessful);
+		spyExecutor.Received().Execute(Arg.Any<string>());
+		Assert.NotNull(suppliedCommandLine);
+		var match = GroupNameAndDirRegex().Match(suppliedCommandLine);
+		Assert.True(match.Success);
+		Assert.Equal("dotnet sln",  match.Groups[1].Value);
+		Assert.Equal("add",  match.Groups[3].Value);
+	}
+
+	[Fact]
+	void ProcessesShouldGenerateDocumentationFile()
+	{
+		sut!.ShouldGenerateDocumentationFile = true;
 		var result = sut!.Execute();
 		Assert.True(result.IsSuccessful);
 		spyExecutor.Received().Execute(Arg.Any<string>());

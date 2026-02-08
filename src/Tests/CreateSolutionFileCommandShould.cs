@@ -2,14 +2,13 @@
 
 using Pri.Essentials.DotnetProjects;
 using Pri.Essentials.DotnetProjects.Commands;
-using Pri.Essentials.DotnetProjects.Commands.Constants;
 
 namespace Tests;
 
-public partial class CreateSolutionCommandShould
-	: CommandTestingBase<CreateSolutionCommand>
+public partial class CreateSolutionFileCommandShould
+	: CommandTestingBase<CreateSolutionFileCommand>
 {
-	public CreateSolutionCommandShould()
+	public CreateSolutionFileCommandShould()
 		: base(Substitute.For<IShellExecutor>())
 	{
 		spyExecutor
@@ -18,12 +17,11 @@ public partial class CreateSolutionCommandShould
 		sut = InitializeSut(directory, spyExecutor);
 	}
 
-	private static CreateSolutionCommand InitializeSut(string solutionDirectory, IShellExecutor shellExecutor)
+	private static CreateSolutionFileCommand InitializeSut(string solutionDirectory, IShellExecutor shellExecutor)
 	{
-		return new CreateSolutionCommand(shellExecutor: shellExecutor,
+		return new CreateSolutionFileCommand(shellExecutor: shellExecutor,
 			outputDirectory: solutionDirectory,
-			outputName: "MySolution",
-			frameworkName: SupportedFrameworkName.Net10);
+			outputName: "MySolution");
 	}
 
 	[Fact]

@@ -78,6 +78,21 @@ public partial class CreateProjectCommandShould
 		Assert.Equal("net9.0", match.Groups[5].Value);
 	}
 
+	[Fact]
+	void ProcessesShouldGenerateDocumentationFile()
+	{
+		sut!.ShouldGenerateDocumentationFile = true;
+		var result = sut.Execute();
+		Assert.True(result.IsSuccessful);
+		spyExecutor.Received().Execute(Arg.Any<string>());
+		Assert.NotNull(suppliedCommandLine);
+		var match = GroupNameAndDirRegex().Match(suppliedCommandLine);
+		Assert.True(match.Success);
+		Assert.Equal(directory, match.Groups[3].Value);
+		Assert.Equal("Library", match.Groups[4].Value);
+		Assert.Equal("net9.0", match.Groups[5].Value);
+	}
+
 	[GeneratedRegex(@"^(\S+ \S+) (\S+) -o (\S+) -n (\S+) -f (\S+)$")]
 	private static partial Regex GroupNameAndDirRegex();
 }

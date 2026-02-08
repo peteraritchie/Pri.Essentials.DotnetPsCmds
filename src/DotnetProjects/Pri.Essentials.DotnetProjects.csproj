@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Pri.ProductivityExtensions.Source" Version="1.0.0">
+    <PackageReference Include="Pri.ProductivityExtensions.Source" Version="1.0.1">
+      <NoWarn>IDE1006</NoWarn>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -26,5 +27,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
+
+  <!--<ItemGroup>
+    <InternalsVisibleTo Include="Tests"/>
+  </ItemGroup>-->
 
 </Project>
