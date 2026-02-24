@@ -44,6 +44,7 @@ jobs:
     steps:
       # Determine the release notes, writing them to a file
       - name: Determine release notes
+        shell: pwsh
         id: release-notes
         run: |
           @'
