@@ -13,9 +13,9 @@
       },
       "Pri.ProductivityExtensions.Source": {
         "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "wGqZFRVF5glZnXVLsXXV2xQ0lTOIIF5v57i0V9uARpCdvnMhfzgzsiJX7A4w8gpb1C9joLYdhj1EHfM2IzuF7g=="
+        "requested": "[1.2.0, )",
+        "resolved": "1.2.0",
+        "contentHash": "3v5G2YCB9CkcT6UtvJySWgCiqRPmeFBL849fK5/YIpZxfKgovWFkIwEpO4CH4Enx8LmfxCx4PkGvRPYc1v2qww=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",

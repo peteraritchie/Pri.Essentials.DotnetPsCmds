@@ -84,6 +84,7 @@ public class EditDotnetProjectCmdlet : PSCmdlet
 	[Parameter(Mandatory = false, ParameterSetName = "WithProjectAndItemProperty")]
 	[Parameter(Mandatory = false, ParameterSetName = "WithPathAndItemProperty")]
 	[Alias("FriendAssemblies", "Friends")]
+	// ReSharper disable once UnusedAutoPropertyAccessor.Global
 	public string[]? InternalsVisibleTo { get; set; }
 	// AssemblyMetadata?
 
@@ -107,6 +108,7 @@ public class EditDotnetProjectCmdlet : PSCmdlet
 	[Parameter(Mandatory = true, ParameterSetName = "WithPathAndObject",
 		HelpMessage = "The properties to set.")]
 	// ReSharper disable once UnusedAutoPropertyAccessor.Global
+	// ReSharper disable once CollectionNeverUpdated.Global
 	public Hashtable? PropertiesObject { get; set; }
 
 	/// <inheritdoc />
@@ -182,107 +184,18 @@ public class EditDotnetProjectCmdlet : PSCmdlet
 			FileAccess.ReadWrite,
 			FileShare.None);
 		var doc = XDocument.Load(stream);
+		bool hasDocChanged = false;
+		doc.Changed += (_, _) => hasDocChanged = true;
 
 		var projectConfigurationService = new VisualStudioProjectConfigurationService(doc);
 
 		var actions = EditDotnetProjectService.ProcessPropertyRequests(this, properties, projectConfigurationService);
 
-		if (properties.Any()
+		if ((properties.Any() || (InternalsVisibleTo?.Any() ?? false))
 			&& ShouldProcess(path, EditDotnetProjectService.DetermineActionDescription(InternalsVisibleTo, properties).ToString()))
 		{
 			WriteVerbose($"Modifying project at '{path}'");
-#if false
-			foreach ((string? key, object? value) in properties)
-			{
-				switch (key)
-				{
-					case ProjectElementNames.AppendTargetFrameworkToOutputPath when (value is bool enable):
-						projectConfigurationService.SetAppendTargetFrameworkToOutputPath(enable);
-						break;
-					case ProjectElementNames.AppendTargetFrameworkToOutputPath when (value is string valueText && bool.TryParse(valueText, out var enable)):
-						projectConfigurationService.SetAppendTargetFrameworkToOutputPath(enable);
-						break;
-					case ProjectElementNames.AppendTargetFrameworkToOutputPath:
-						WriteWarning($"The value '{value}' is not supported for property {key}.");
-						break;
-					case ProjectElementNames.AssemblyName when (value is string valueText):
-						projectConfigurationService.SetAssemblyName(valueText);
-						break;
-					case ProjectElementNames.GenerateDocumentationFile when (value is bool enable):
-						projectConfigurationService.SetGenerateDocumentationFile(enable);
-						break;
-					case ProjectElementNames.GenerateDocumentationFile when (value is string valueText && bool.TryParse(valueText, out var enable)):
-						projectConfigurationService.SetGenerateDocumentationFile(enable);
-						break;
-					case ProjectElementNames.GenerateDocumentationFile:
-						WriteWarning($"The value '{value}' is not supported for property {key}.");
-						break;
-					case ProjectElementNames.IntermediateOutputPath when (value is string valueText):
-						projectConfigurationService.SetIntermediateOutputPath(valueText);
-						break;
-					case ProjectElementNames.LangVersion when (value is string valueText):
-						projectConfigurationService.SetLangVersion(valueText);
-						break;
-					case ProjectElementNames.Nullable when (value is bool enable):
-						projectConfigurationService.SetNullable(enable);
-						break;
-					case ProjectElementNames.Nullable when (value is string valueText && bool.TryParse(valueText, out var enable)):
-						projectConfigurationService.SetNullable(enable);
-						break;
-					case ProjectElementNames.Nullable when (value is string valueText && Regex.Match(valueText, @"\s*(disable|enable)\s*").Success):
-						projectConfigurationService.SetNullable(valueText == "enable");
-						break;
-					case ProjectElementNames.Nullable:
-						WriteWarning($"The value '{value}' is not supported for property {key}.");
-						break;
-					case ProjectElementNames.OutputPath when (value is string valueText):
-						projectConfigurationService.SetOutputPath(valueText);
-						break;
-					case ProjectElementNames.OutputType when (value is string valueText && AssemblyOutputType.TryFind(valueText, out var outputType)):
-						projectConfigurationService.SetOutputType(outputType);
-						break;
-					case ProjectElementNames.OutputType:
-						WriteWarning($"The value '{value}' is not supported for property {key}.");
-						break;
-					case ProjectElementNames.RestorePackagesWithLockFile when (value is bool enable):
-						projectConfigurationService.SetRestorePackagesWithLockFile(enable);
-						break;
-					case ProjectElementNames.RestorePackagesWithLockFile when (value is string valueText && bool.TryParse(valueText, out var enable)):
-						projectConfigurationService.SetRestorePackagesWithLockFile(enable);
-						break;
-					case ProjectElementNames.RestorePackagesWithLockFile:
-						WriteWarning($"The value '{value}' is not supported for property {key}.");
-						break;
-					case ProjectElementNames.TargetFramework
-					when (value is string valueText
-						&& SupportedFrameworkName.TryFind(valueText, out var name)):
-						projectConfigurationService.SetTargetFramework(name);
-						break;
-					case ProjectElementNames.Version when (value is string valueText):
-						projectConfigurationService.SetVersion(valueText);
-						break;
-					case ProjectElementNames.VersionPrefix when (value is string valueText):
-						projectConfigurationService.SetVersionPrefix(valueText);
-						break;
-					case ProjectElementNames.VersionSuffix when (value is string valueText):
-						projectConfigurationService.SetVersionSuffix(valueText);
-						break;
-					// SuppressMessage
-					/*
-		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.SuppressMessage">
-		  <_Parameter1>Style</_Parameter1>
-		  <_Parameter2>IDE1006:Naming Styles</_Parameter2>
-		  <Justification>&lt;Pending&gt;</Justification>
-		  <Scope>module</Scope>
-		</AssemblyAttribute>
-					 */
-					default:
-						WriteWarning($"Property '{key}' or value '{value}' is not supported.");
-						break;
-				}
-			}
 
-#endif
 			foreach ((string propertyName, Action action) in actions)
 			{
 				WriteVerbose($"Setting property {propertyName}");
@@ -296,12 +209,9 @@ public class EditDotnetProjectCmdlet : PSCmdlet
 					projectConfigurationService.AddFriendAssemblyName(assemblyName);
 				}
 			}
-
-			// Reset position before saving
-			stream.Position = 0;
-			doc.Save(stream);
 		}
 
+		WriteVerbose($"SuppressMessage is {(SuppressMessage is null ? " not" : "")}passed.");
 		if (SuppressMessage is not null)
 		{
 			if (string.IsNullOrWhiteSpace(SuppressMessage.CheckId))
@@ -329,15 +239,34 @@ public class EditDotnetProjectCmdlet : PSCmdlet
 			if (ShouldProcess(path, "Add AssemblyAttribute SuppressMessage."))
 			{
 				WriteVerbose($"To create AssemblyAttribute with SuppressMessage"
-					+ " Category: {SuppressMessage.Category}"
-					+ " CheckId: {SuppressMessage.CheckId}"
-					+ " Justification: {SuppressMessage.Justification}"
-					+ " Scope: {SuppressMessage.Scope}"
-					+ " Target: {SuppressMessage.Target}");
+					+ $" Category: {SuppressMessage.Category}"
+					+ $" CheckId: {SuppressMessage.CheckId}"
+					+ $" Justification: {SuppressMessage.Justification}"
+					+ $" Scope: {SuppressMessage.Scope}"
+#if UNSPPORTABLE
+					+ $" Target: {SuppressMessage.Target}"
+#endif
+					);
+				projectConfigurationService.AddSuppressMessageAttributeAssemblyAttribute(
+					category: SuppressMessage.Category,
+					checkId: SuppressMessage.CheckId,
+					justification: SuppressMessage.Justification
+#if UNSPPORTABLE
+					, scope: SuppressMessage.Scope
+					, SuppressMessage.Target
+#endif
+					);
 			}
 		}
 
-		return;
+		if (!hasDocChanged)
+		{
+			return;
+		}
+
+		// Reset position before saving
+		stream.Position = 0;
+		doc.Save(stream);
 	}
 }
 

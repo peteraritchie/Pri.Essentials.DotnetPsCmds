@@ -8,6 +8,27 @@ public class FileSystemShould
 {
 	[Fact]
 	[Trait("Category", "Integration")]
+	void OpenFileCorrectly()
+	{
+		var tempFile = Path.GetTempFileName();
+		Assert.True(File.Exists(tempFile));
+		try
+		{
+			File.WriteAllText(tempFile, "867-5309");
+			Assert.True(File.Exists(tempFile));
+			IFileSystem fs = IFileSystem.Default;
+			var stream = fs.FileOpen(tempFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+			using var reader = new StreamReader(stream);
+			Assert.Equal("867-5309", reader.ReadToEnd());
+		}
+		finally
+		{
+			File.Delete(tempFile);
+		}
+	}
+
+	[Fact]
+	[Trait("Category", "Integration")]
 	public void DeleteFileCorrectly()
 	{
 		var tempFile = Path.GetTempFileName();

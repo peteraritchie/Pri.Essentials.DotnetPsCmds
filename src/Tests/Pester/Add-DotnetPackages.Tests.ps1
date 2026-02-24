@@ -18,10 +18,10 @@ Describe 'Add-DotnetPackages' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 		select-string `
 			'<PackageReference Include="ProductivityExtensions" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given PackageId, package references added correctly.' {
@@ -34,10 +34,10 @@ Describe 'Add-DotnetPackages' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 		select-string `
 			'<PackageReference Include="ProductivityExtensions" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given Project, package references added correctly.' {
@@ -50,10 +50,10 @@ Describe 'Add-DotnetPackages' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 		select-string `
 			'<PackageReference Include="ProductivityExtensions" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given PackageId and Project, package references added correctly.' {
@@ -66,9 +66,9 @@ Describe 'Add-DotnetPackages' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 		select-string `
 			'<PackageReference Include="ProductivityExtensions" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 }

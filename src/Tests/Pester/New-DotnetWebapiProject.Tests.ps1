@@ -33,6 +33,6 @@ Describe 'New-DotnetProject' {
 		Test-Path "$outputPath/$projectName.csproj" | Should -Be $true;
 		select-string `
 			"<GenerateDocumentationFile>true</GenerateDocumentationFile>" `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 }

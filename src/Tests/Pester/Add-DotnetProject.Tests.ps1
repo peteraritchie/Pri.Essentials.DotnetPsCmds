@@ -19,7 +19,7 @@ Describe 'Add-DotnetProject' {
 		Test-Path "$outputPath/$productName.sln" | Should -Be $true;
 		select-string `
 			'"MyClassLib", "MyClassLib(\\|/)MyClassLib.csproj"' `
-			-Path "$outputPath/$productName.sln" | Should -Be $true;
+			-Path "$outputPath/$productName.sln" -Quiet | Should -Be $true;
 
 	}
 }

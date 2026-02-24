@@ -1,8 +1,10 @@
-﻿namespace Pri.Essentials.DotnetProjects;
+﻿
+namespace Pri.Essentials.DotnetProjects;
 
 /// <summary>
 /// A DTO for SuppressMessageAttribute information.
 /// </summary>
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 public class SuppressMessageParameters
 {
 	/// <summary>
@@ -25,8 +27,10 @@ public class SuppressMessageParameters
 	/// </summary>
 	public string? Scope { get; init; } = null;
 
+#if UNSUPPORTABLE
 	/// <summary>
 	/// A fully qualified path that represents the code analysis target.
 	/// </summary>
 	public string? Target { get; init; } = null;
+#endif
 }

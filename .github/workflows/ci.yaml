@@ -42,10 +42,33 @@ jobs:
     permissions:
       contents: write  # to be able to publish a GitHub release
     steps:
+      # Determine the release notes, writing them to a file
       - name: Determine release notes
         id: release-notes
         run: |
-          echo "release-notes=Update to support .NET 1.0.102 change in sln/slx default." >> $GITHUB_OUTPUT
+          @'
+          Added Edit-DotnetProject Cmdlet supporting the following properties:
+          - AppendTargetFrameworkToOutputPath
+          - AssemblyName
+          - GenerateDocumentationFile
+          - IntermediateOutputPath
+          - LangVersion
+          - Nullable
+          - OutputType
+          - OutputPath
+          - RestorePackagesWithLockFile
+          - TargetFramework
+          - Version
+          - VersionPrefix
+          - VersionSuffix
+          As well as InternalsVisibleTo AssemblyAttribute/SupressMessageAttribute.
+          '@ | out-file release-notes.txt;
+
+      - name: Upload Release Notes Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ReleaseNotes
+          path: release-notes.txt
 
   # Determining next release version from current release version
   determine-next-release-version:
@@ -69,9 +92,9 @@ jobs:
       dotnet-versions: >-
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
-      release-notes: ${{ needs.determine-release-notes.outputs.release-notes }}
+      release-notes-artifact-name: ReleaseNotes
       source-directory: ./src
-      artifact-name: Module
+      output-artifact-name: Module
       module-guid: ${{ vars.PS_MODULE_GUID }}
 
   # release

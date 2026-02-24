@@ -8,6 +8,30 @@ namespace Tests;
 
 public class VisualStudioProjectConfigurationServiceShould
 {
+	[Fact]
+	void ThrowOnMissingCategory()
+	{
+		var doc = XDocument.Parse("<Project><PropertyGroup/></Project>");
+		var sut = new VisualStudioProjectConfigurationService(doc);
+		Assert.Throws<ArgumentNullException>(() => sut.AddSuppressMessageAttributeAssemblyAttribute(null!, "CheckId", null
+#if UNSUPPORTABLE
+			, null, null
+#endif
+           ));
+	}
+
+	[Fact]
+	void ThrowOnMissingCheckId()
+	{
+		var doc = XDocument.Parse("<Project><PropertyGroup/></Project>");
+		var sut = new VisualStudioProjectConfigurationService(doc);
+		Assert.Throws<ArgumentNullException>(() => sut.AddSuppressMessageAttributeAssemblyAttribute("Category", null!, null
+#if UNSUPPORTABLE
+			, null, null
+#endif
+		));
+	}
+
 	[Theory]
 	[InlineData("""
 	            <Project Sdk="Microsoft.NET.Sdk">
@@ -74,15 +98,50 @@ public class VisualStudioProjectConfigurationServiceShould
 		sut.AddSuppressMessageAttributeAssemblyAttribute(
 			category: "Style",
 			checkId: "IDE1006:Naming Styles",
-			justification: "<Pending>",
-			scope: "module");
+			justification: "<Pending>"
+#if UNSUPPORTABLE
+			scope: ProjectElementNames.ScopeName.Module,
+			,target: null
+#endif
+			);
 		var elements = doc.XPathSelectElements(
 			"/Project/ItemGroup/AssemblyAttribute");
 		Assert.NotEmpty(elements);
-		var element = doc.XPathSelectElements(
-			"/Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessage' and _Parameter1='Style' and _Parameter2 = 'IDE1006:Naming Styles' and Justification = '<Pending>' and Scope = 'module']]");
+		var element = doc.XPathSelectElement(
+			"/Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessageAttribute' and _Parameter1='Style' and _Parameter2 = 'IDE1006:Naming Styles' and Justification = '<Pending>' and Scope = 'module']]");
 		Assert.NotNull(element);
-}
+	}
+
+	[Theory]
+	[InlineData("""
+	            <Project Sdk="Microsoft.NET.Sdk">
+	              <PropertyGroup>
+	                <TargetFramework>netstandard2.0</TargetFramework>
+	                <LangVersion>latest</LangVersion>
+	                <Nullable>enable</Nullable>
+	              </PropertyGroup>
+	            </Project>
+	            """)]
+	void AddSuppressMessageAttributeWithTargetSuccessfully(string xmlText)
+	{
+		var doc = XDocument.Parse(xmlText);
+		var sut = new VisualStudioProjectConfigurationService(doc);
+		sut.AddSuppressMessageAttributeAssemblyAttribute(
+			category: "Maintainability",
+			checkId: "PRm1001:XML Comments Not Complete",
+			justification: "<Pending>"
+#if UNSUPPORTABLE
+			scope: "member",
+			, target: "~M:System.Index.FromStart(System.Int32)~System.Index"
+#endif
+			);
+		var elements = doc.XPathSelectElements(
+			"/Project/ItemGroup/AssemblyAttribute");
+		Assert.NotEmpty(elements);
+		var element = doc.XPathSelectElement(
+			"/Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessageAttribute' and _Parameter1='Maintainability' and _Parameter2 = 'PRm1001:XML Comments Not Complete' and Justification = '<Pending>' and Scope = 'member']]");
+		Assert.NotNull(element);
+	}
 
 	[Theory]
 	[InlineData("""

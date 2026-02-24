@@ -17,6 +17,7 @@
 - [Add-DotnetProjectReference](#adding-project-references)
 - [Add-DotnetPackages](#adding-nuget-package-references)
 - [Add-DotnetProject](#adding-project-references)
+- [Modifying project properties](#modifying-project-properties) &#x1F195;
 - [Scaffolding complete solutions](#scaffolding-complete-solutions)
  
 ## Getting Started
@@ -66,8 +67,8 @@ New-DotnetProject 'classlib' Domain MyProduct.Domain;
 Creates a class library project with the name "MyProduct.Domain" in the
 "Domain" directory (`dotnet new classlib -o Domain -n MyProduct.Domain`).
 
-At this point, you might be thinking, _how is this different than using
-the `dotnet` command line tool?_ The objects returned by the cmdlets can be
+At this point, you might be thinking, "How is this different than using
+the `dotnet` command line tool"? The objects returned by the cmdlets can be
 built upon the results of executed cmdlets. For example, in complex solutions,
 you're going to want to add projects to the solution file. You can do that
 by using a solution object:
@@ -84,7 +85,7 @@ solution.
 
 A nice feature of PowerShell is the ability to pipe objects. So, instead of
 passing the solution object to the `New-DotnetProject` cmdlet, you can pipe
-the result of `New-DotnetSolution` to `New-DotnetProject` to realize same
+the result of `New-DotnetSolution` to `New-DotnetProject` to realize the same
 outcome:
 
 ```pwsh
@@ -150,6 +151,73 @@ Or
 $t = New-DotnetProject 'xunit' MyProduct/Tests MyProduct.Tests;
 $t | Add-DotnetPackage -PackageId NSubstitute -PackageVersion 5.2.0
 ```
+
+### Modifying project properties
+
+The `Edit-DotnetProject` cmdlet is used to edit project properties, further
+enabling scaffolding-as-code. There are two types of properties: project group
+properties and item group properties. Both are handled differently by
+Edit-DotnetProject. To support modifying multiple project group properties
+at once, there is a `-Properties` parameter that accepts either a single 
+name/value pair or an array of name/value pairs. Item group properties have
+explicit parameters because their value can sometimes be complex and not just
+a single value.
+
+Some examples of project group properties follow:
+
+Set the language version of a project to the latest version:
+
+```pwsh
+Edit-DotnetProject -path src\TheProgram.csproj -Properties "LangVersion:latest"
+```
+
+Set the language version of a project to the latest version and enable
+nullable reference types:
+
+```pwsh
+Edit-DotnetProject -path src\TheProgram.csproj -Properties @("LangVersion:latest", "Nullable:true")
+```
+
+Some examples of item group properties follow:
+
+To make internal types visible to the Tests assembly&mdash;setting the
+`InternalsVisibleTo` property:
+
+```pwsh
+Edit-DotnetProject -path src\TheProgram.csproj -InternalsVisibleTo Tests
+```
+
+To globally suppress a code analysis rule violation for the entire module:
+
+```pwsh
+Edit-DotnetProject -path src\TheProgram.csprojroj -SuppressMessage @{Category="Compiler"; CheckId="CS1591:MissingXmlCommentForPubliclyVisibleTypeOrMember"; Justification:"Generated Code"}
+
+```
+
+Supported project group properties:
+
+| **Property** | **Brief explanation** |
+|---|---|
+| **AppendTargetFrameworkToOutputPath** | When `true`, appends the target framework folder (e.g., `net6.0`) to the output path to avoid multi-targeting collisions. |
+| **AssemblyName** | The base name of the compiled assembly (DLL or EXE) produced by the build. |
+| **GenerateDocumentationFile** | When `true`, emits an XML documentation file from triple-slash comments alongside the assembly. |
+| **IntermediateOutputPath** | Directory where intermediate build artifacts are written (typically the `obj` folder). |
+| **LangVersion** | Specifies the C# language version to use (e.g., `latest`, `9.0`, `preview`). Example argument text: `"LangVersion:latest"` |
+| **Nullable** | Controls nullable reference types behavior; common values: `enable`, `disable`, `annotations`, `warnings`. Example argument text: `"Nullable:true"` |
+| **OutputType** | Type of output produced by the project, e.g., `Library`, `Exe`, `WinExe`, `Module`. |
+| **OutputPath** | Final directory where compiled outputs are placed (typically under `bin\<Configuration>\`). |
+| **RestorePackagesWithLockFile** | When `true`, enables package restore using a lock file (`packages.lock.json`) to ensure repeatable restores. |
+| **TargetFramework** | The target framework moniker the project builds for (e.g., `net7.0`, `netstandard2.0`). |
+| **Version** | The full assembly/package version string used for the build and NuGet package (overrides prefix/suffix if set). |
+| **VersionPrefix** | The base version portion (e.g., `1.2.3`) used when composing package/assembly versions. |
+| **VersionSuffix** | A prerelease or build metadata suffix appended to the version (e.g., `beta1`, `ci-1234`). |
+
+More detail on these properties can be found in [Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=visualstudio) 
+
+Supported item group properties:
+
+- InternalsVisibleTo
+- AssemblyAttribute/SuppressMessageAttribute
 
 ### Scaffolding complete solutions
 
