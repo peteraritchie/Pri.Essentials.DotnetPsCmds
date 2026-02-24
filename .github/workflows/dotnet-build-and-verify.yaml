@@ -134,7 +134,8 @@ jobs:
           'Add-DotnetProject', `
           'Add-DotnetProjectReference', `
           'New-DotnetProject', `
-          'New-DotnetSolution') `
+          'New-DotnetSolution', `
+          'Edit-DotnetProject') `
           -FunctionsToExport @() `
           -VariablesToExport @() `
           -AliasesToExport @()
