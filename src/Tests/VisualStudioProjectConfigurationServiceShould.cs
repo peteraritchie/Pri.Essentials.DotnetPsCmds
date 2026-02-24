@@ -139,7 +139,7 @@ public class VisualStudioProjectConfigurationServiceShould
 			"/Project/ItemGroup/AssemblyAttribute");
 		Assert.NotEmpty(elements);
 		var element = doc.XPathSelectElement(
-			"/Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessageAttribute' and _Parameter1='Maintainability' and _Parameter2 = 'PRm1001:XML Comments Not Complete' and Justification = '<Pending>' and Scope = 'member']]");
+			"/Project/ItemGroup[./AssemblyAttribute[ @Include='System.Diagnostics.CodeAnalysis.SuppressMessageAttribute' and _Parameter1='Maintainability' and _Parameter2 = 'PRm1001:XML Comments Not Complete' and Justification = '<Pending>' and Scope = 'module']]");
 		Assert.NotNull(element);
 	}
 
