@@ -50,5 +50,5 @@ jobs:
       release-notes: Pull request
       version: ${{ needs.determine-next-release-version.outputs.version }}
       source-directory: ./src
-      artifact-name: Module
+      output-artifact-name: Module
       module-guid: ${{ vars.PS_MODULE_GUID }}
