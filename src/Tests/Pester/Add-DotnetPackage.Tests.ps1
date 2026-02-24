@@ -18,7 +18,7 @@ Describe 'Add-DotnetPackage' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given PackageId, package reference added correctly.' {
@@ -31,7 +31,7 @@ Describe 'Add-DotnetPackage' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given Project, package reference added correctly.' {
@@ -44,7 +44,7 @@ Describe 'Add-DotnetPackage' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given PackageId and Project, package reference added correctly.' {
@@ -57,6 +57,6 @@ Describe 'Add-DotnetPackage' {
 
 		select-string `
 			'<PackageReference Include="Pri.LongPath" Version="\d+\.\d+.\d+"' `
-			-Path "$outputPath/$projectName.csproj" | Should -Be $true;
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
 	}
 }

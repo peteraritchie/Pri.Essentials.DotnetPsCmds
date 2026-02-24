@@ -83,12 +83,12 @@ public class CreateSolutionCommand(
 	{
 		var createSolutionFileCommand =
 			new CreateSolutionFileCommand(shellExecutor, outputDirectory, outputName);
-		var firstResult = createSolutionFileCommand.Execute() as ShellOperationResult;
-		return new ShellOperationResult(ExitCode: firstResult.ExitCode,
-			OutputText: firstResult.OutputText,
-			ErrorText: firstResult.ErrorText)
+		var result = createSolutionFileCommand.Execute() as ShellOperationResult;
+		return new ShellOperationResult(ExitCode: result!.ExitCode,
+			OutputText: result.OutputText,
+			ErrorText: result.ErrorText)
 		{
-			OperationText = firstResult.OperationText,
+			OperationText = result.OperationText,
 		};
 	}
 

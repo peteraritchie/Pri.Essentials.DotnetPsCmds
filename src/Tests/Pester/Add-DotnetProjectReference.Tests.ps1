@@ -19,7 +19,7 @@ Describe 'Add-DotnetProjectReference' {
 
 		select-string `
 			'<ProjectReference Include="..(\\|/)MyClassLib(\\|/)MyClassLib.csproj" />' `
-			-Path "$outputPath/Tests/Tests.csproj" | Should -Be $true;
+			-Path "$outputPath/Tests/Tests.csproj" -Quiet | Should -Be $true;
 	}
 
 	It 'Given TargetProject, project reference added correctly.' {
@@ -34,6 +34,6 @@ Describe 'Add-DotnetProjectReference' {
 
 		select-string `
 			'<ProjectReference Include="..(\\|/)MyClassLib(\\|/)MyClassLib.csproj" />' `
-			-Path "$outputPath/Tests/Tests.csproj" | Should -Be $true;
+			-Path "$outputPath/Tests/Tests.csproj" -Quiet | Should -Be $true;
 	}
 }

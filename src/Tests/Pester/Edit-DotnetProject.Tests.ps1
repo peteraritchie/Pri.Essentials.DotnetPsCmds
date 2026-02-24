@@ -16,6 +16,28 @@ Describe 'Edit-DotnetProject' {
 		Remove-Item "$PSScriptRoot/$testDir" -Recurse -Force -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue;
 	}
 
+	It "Given project, sets AssemblyAttribute/SuppressMessageAttribute correctly" {
+		Edit-DotnetProject -path "$outputPath/$projectName.csproj" -SuppressMessage @{Category="Category"; CheckId="PR1000"; Justification="<Pending>"; Scope="module"} -WarningVariable warnings;
+
+		$warnings | Should -Be $null
+
+		select-string `
+			'<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.SuppressMessageAttribute">' `
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
+		select-string `
+			'<_Parameter1>Category</_Parameter1>' `
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
+		select-string `
+			'<_Parameter2>PR1000</_Parameter2>' `
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
+		select-string `
+			'<Justification>&lt;Pending&gt;</Justification>' `
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
+		select-string `
+			' <Scope>module</Scope>' `
+			-Path "$outputPath/$projectName.csproj" -Quiet | Should -Be $true;
+	}
+
 	It "Given project, sets InternalsVisibleTo correctly." {
 		Edit-DotnetProject -path "$outputPath/$projectName.csproj" -InternalsVisibleTo Tests -WarningVariable warnings;
 

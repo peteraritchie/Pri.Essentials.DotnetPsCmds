@@ -9,6 +9,66 @@ namespace Pri.Essentials.DotnetProjects;
 /// </summary>
 public static class ProjectElementNames
 {
+	/// <summary>
+	/// A strongly-typed enum pattern implementation of
+	/// SuppressMessageAttribute Scope property values.
+	/// </summary>
+	public sealed class ScopeName
+	{
+		private readonly string scopeName;
+
+		private ScopeName(string scopeName)
+		{
+			this.scopeName = scopeName;
+		}
+
+		/// <summary>namespaceanddescendants</summary>
+		public static readonly ScopeName NamespaceAndDescendants = new("namespaceanddescendants");
+		/// <summary>namespace</summary>
+		public static readonly ScopeName Namespace = new("namespace");
+		/// <summary>member</summary>
+		public static readonly ScopeName Member = new("member");
+		/// <summary>module</summary>
+		public static readonly ScopeName Module = new("module");
+		/// <summary>type</summary>
+		public static readonly ScopeName Type = new("type");
+
+		/// <summary>
+		/// Gets a read-only dictionary containing all supported scope names
+		/// mapped to their corresponding <see cref="ScopeName"/> instances.
+		/// </summary>
+		/// <remarks>
+		/// The dictionary keys are string representations of supported output
+		/// types, and the values are the associated <see cref="ScopeName"/>
+		/// objects. This collection can be used to enumerate or look up
+		/// output types by name.
+		/// </remarks>
+		public static readonly IReadOnlyDictionary<string, ScopeName> All =
+			new Dictionary<string, ScopeName>
+			{
+				{NamespaceAndDescendants, NamespaceAndDescendants},
+				{Namespace, Namespace},
+				{Member, Member},
+				{Module, Module},
+				{Type, Type}
+			};
+
+		/// <inheritdoc />
+		[ExcludeFromCodeCoverage]
+		public override string ToString() => scopeName;
+
+		/// <summary>
+		/// Implicitly converts a <see cref="ScopeName"/> to its string
+		/// representation.
+		/// </summary>
+		/// <param name="scopeName">
+		/// The <see cref="ScopeName"/> instance to convert.
+		/// </param>
+		/// <returns>The string value of the scope name.</returns>
+		public static implicit operator string(ScopeName scopeName) =>
+			scopeName.scopeName;
+	}
+
 	/// <summary>Project</summary>
 	public const string Project = "Project";
 
@@ -34,24 +94,15 @@ public static class ProjectElementNames
 	public const string Justification = nameof(SuppressMessageAttribute.Justification);
 	/// <summary>Scope property for AssemblyAttribute SuppressMessageAttribute</summary>
 	public const string Scope = nameof(SuppressMessageAttribute.Scope);
-
-	/// <summary>ItemGroup/AssemblyAttribute.Include value</summary>
-	public static readonly string ExcludeFromCodeCoverageAttributeName
-		= typeof(ExcludeFromCodeCoverageAttribute).FullName!;
-	/// <summary>ItemGroup/AssemblyAttribute.Include value</summary>
-	public static readonly string InternalsVisibleToAttributeName
-		= typeof(InternalsVisibleToAttribute).FullName!;
-	/// <summary>ItemGroup/AssemblyAttribute.Include value</summary>
-	public static readonly string SuppressMessageAttributeName
-		= typeof(SuppressMessageAttribute).FullName!;
+#if UNSUPPORTABLE
+	/// <summary>Scope property for AssemblyAttribute SuppressMessageAttribute</summary>
+	public const string Target = nameof(SuppressMessageAttribute.Target);
+#endif
 
 	/// <summary>ItemGroup/InternalsVisibleTo</summary>
 	public static readonly string InternalsVisibleToName
-		= nameof(InternalsVisibleToAttribute)![..^9];
-
-	public static readonly string ExcludeFromCodeCoverageName
-		= nameof(ExcludeFromCodeCoverageAttribute)![..^9];
-	#endregion // ItemGroup
+		= nameof(InternalsVisibleToAttribute)[..^9];
+#endregion // ItemGroup
 
 	#region PropertyGroup properties
 

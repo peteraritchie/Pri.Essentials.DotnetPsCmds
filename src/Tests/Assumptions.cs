@@ -45,7 +45,7 @@ public class Assumptions
 		var category = "Style";
 		var checkId = "IDE1006:Naming Styles";
 		var justification = "<Pending>";
-		var scope = "module";
+		var scope = ProjectElementNames.ScopeName.Module;
 		var existingElement = projectElement.XPathSelectElement(
 			$"./ItemGroup[./AssemblyAttribute]");
 		existingElement = projectElement.XPathSelectElement(

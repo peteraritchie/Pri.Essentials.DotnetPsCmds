@@ -3,6 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pri.Essentials.DotnetProjects.Commands.Constants;
 
+/// <summary>
+/// A strongly-typed enum pattern implementation of assembly output type values
+/// </summary>
 public sealed class AssemblyOutputType
 {
 	private readonly string outputTypeName;
@@ -12,18 +15,26 @@ public sealed class AssemblyOutputType
 		this.outputTypeName = outputTypeName;
 	}
 
+	/// <summary>exe</summary>
 	public static readonly AssemblyOutputType Exe = new("exe");
+	/// <summary>library</summary>
 	public static readonly AssemblyOutputType Library = new("library");
+	/// <summary>winexe</summary>
 	public static readonly AssemblyOutputType WinExe = new("winexe");
+	/// <summary>module</summary>
 	public static readonly AssemblyOutputType Module = new("module");
 
 	/// <summary>
-	/// Gets a read-only dictionary containing all supported output type names mapped to their corresponding <see
-	/// cref="AssemblyOutputType"/> instances.
+	/// Gets a read-only dictionary containing all supported output type names
+	/// mapped to their corresponding <see cref="AssemblyOutputType"/>
+	/// instances.
 	/// </summary>
-	/// <remarks>The dictionary keys are string representations of supported output types, and the values are the
-	/// associated <see cref="AssemblyOutputType"/> objects. This collection can be used to enumerate or look up
-	/// output types by name.</remarks>
+	/// <remarks>
+	/// The dictionary keys are string representations of supported output
+	/// types, and the values are the associated
+	/// <see cref="AssemblyOutputType"/> objects. This collection can be used
+	/// to enumerate or look up output types by name.
+	/// </remarks>
 	public static readonly IReadOnlyDictionary<string, AssemblyOutputType> All =
 		new Dictionary<string, AssemblyOutputType>
 		{
@@ -38,10 +49,13 @@ public sealed class AssemblyOutputType
 	public override string ToString() => outputTypeName;
 
 	/// <summary>
-	///
+	/// Implicitly converts a <see cref="AssemblyOutputType"/> to its string
+	/// representation.
 	/// </summary>
-	/// <param name="assemblyOutputType"></param>
-	/// <returns></returns>
+	/// <param name="assemblyOutputType">
+	/// The <see cref="AssemblyOutputType"/> instance to convert.
+	/// </param>
+	/// <returns>The string value of the assembly output type.</returns>
 	public static implicit operator string(AssemblyOutputType assemblyOutputType) =>
 		assemblyOutputType.outputTypeName;
 
