@@ -102,7 +102,7 @@ jobs:
         shell: pwsh
         run: |
           $releaseNotes = '${{ inputs.release-notes }}';
-          $releaseNotes | Out-File -FilePath "${{ inputs.release-notes-artifact-name}}" -Encoding utf8
+          $releaseNotes | Out-File -FilePath "release-notes.txt" -Encoding utf8
 
       - name: Release notes artifact contents to file
         if: ${{ inputs.release-notes-artifact-name != ''}}
