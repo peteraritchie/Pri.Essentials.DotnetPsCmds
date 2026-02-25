@@ -113,7 +113,7 @@ jobs:
       - name: Create PowerShell module manifest
         shell: pwsh
         run: |
-          $releaseNotes = Get-Content -Path "$Env:GITHUB_WORKSPACE/${{ inputs.release-notes-artifact-name}}";
+          $releaseNotes = Get-Content -Path "$Env:GITHUB_WORKSPACE/release-notes.txt";
           New-ModuleManifest `
           -Guid ${{ inputs.module-guid }} `
           -ReleaseNotes $releaseNotes `
