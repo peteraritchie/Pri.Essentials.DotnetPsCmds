@@ -68,7 +68,7 @@ jobs:
       - name: Upload Release Notes Artifact
         uses: actions/upload-artifact@v6
         with:
-          name: ReleaseNotes
+          name: release-notes.txt
           path: release-notes.txt
 
   # Determining next release version from current release version
@@ -93,7 +93,7 @@ jobs:
       dotnet-versions: >-
         ${{ vars.DOTNET_CORE_VERSION != '' && vars.DOTNET_CORE_VERSION || '10.0.x' }}
       version: ${{ needs.determine-next-release-version.outputs.version }}
-      release-notes-artifact-name: ReleaseNotes
+      release-notes-artifact-name: release-notes.txt
       source-directory: ./src
       output-artifact-name: Module
       module-guid: ${{ vars.PS_MODULE_GUID }}

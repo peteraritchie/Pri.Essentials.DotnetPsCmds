@@ -102,19 +102,18 @@ jobs:
         shell: pwsh
         run: |
           $releaseNotes = '${{ inputs.release-notes }}';
-          $releaseNotes | Out-File -FilePath "release-notes.txt" -Encoding utf8
+          $releaseNotes | Out-File -FilePath "${{ inputs.release-notes-artifact-name}}" -Encoding utf8
 
       - name: Release notes artifact contents to file
         if: ${{ inputs.release-notes-artifact-name != ''}}
         uses: actions/download-artifact@v6
         with:
           name: ${{ inputs.release-notes-artifact-name }}
-          path: release-notes.txt
 
       - name: Create PowerShell module manifest
         shell: pwsh
         run: |
-          $releaseNotes = Get-Content -Path "release-notes.txt";
+          $releaseNotes = Get-Content -Path "$Env:GITHUB_WORKSPACE/${{ inputs.release-notes-artifact-name}}";
           New-ModuleManifest `
           -Guid ${{ inputs.module-guid }} `
           -ReleaseNotes $releaseNotes `
