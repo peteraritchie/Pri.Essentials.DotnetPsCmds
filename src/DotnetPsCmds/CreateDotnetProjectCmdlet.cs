@@ -61,7 +61,11 @@ public class CreateDotnetProjectCmdlet : PSCmdlet
 		Position = 3,
 		HelpMessage = "Which .NET framework version to use. If omitted, "
 		+ ".NET 10 will be used.")]
-	[ValidateSet("net10.0", "net9.0","net8.0","standard2.0","standard2.1")]
+	[ValidateSet(SupportedFrameworkName.Net10FrameworkName,
+		SupportedFrameworkName.Net9FrameworkName,
+		SupportedFrameworkName.Net8FrameworkName,
+		SupportedFrameworkName.NetStandard20FrameworkName,
+		SupportedFrameworkName.NetStandard21FrameworkName)]
 	// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
 	public string? FrameworkName { get; set; } = SupportedFrameworkName.Net10;
 
