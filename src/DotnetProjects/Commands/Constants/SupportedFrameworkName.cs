@@ -17,13 +17,17 @@ public sealed class SupportedFrameworkName
 	{
 		this.name = name;
 	}
-
+	public const string NetStandard20FrameworkName = "netstandard2.0";
+	public const string NetStandard21FrameworkName = "netstandard2.1";
+	public const string Net10FrameworkName = "net10.0";
+	public const string Net9FrameworkName  = "net9.0";
+	public const string Net8FrameworkName  = "net8.0";
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public static readonly SupportedFrameworkName Net10 = new("net10.0");
-	public static readonly SupportedFrameworkName Net9 = new("net9.0");
-	public static readonly SupportedFrameworkName Net8 = new("net8.0");
-	public static readonly SupportedFrameworkName NetStandard20 = new("netstandard2.0");
-	public static readonly SupportedFrameworkName NetStandard21 = new("netstandard2.1");
+	public static readonly SupportedFrameworkName Net10 = new(Net10FrameworkName);
+	public static readonly SupportedFrameworkName Net9  = new(Net9FrameworkName);
+	public static readonly SupportedFrameworkName Net8  = new(Net8FrameworkName);
+	public static readonly SupportedFrameworkName NetStandard20 = new(NetStandard20FrameworkName);
+	public static readonly SupportedFrameworkName NetStandard21 = new(NetStandard21FrameworkName);
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 	/// <summary>
