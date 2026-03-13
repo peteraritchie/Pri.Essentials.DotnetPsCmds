@@ -85,7 +85,7 @@ jobs:
         if: >
           ${{ steps.run-tests.outcome != 'skipped' &&
             steps.run-tests.outcome != 'cancelled' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: test-results
           path: "**/*.trx"
@@ -140,7 +140,7 @@ jobs:
           -AliasesToExport @()
 
       - name: Upload module artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.output-artifact-name }}
           path: "${{ inputs.source-directory }}/Pri.Essentials.DotnetPsCmds"
@@ -164,7 +164,7 @@ jobs:
         if: >
           ${{ steps.run-pester-tests.outcome != 'skipped' &&
             steps.run-pester-tests.outcome != 'cancelled' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: pester-test-results
           path: "**/pester-results.xml"
