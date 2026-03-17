@@ -138,7 +138,7 @@ jobs:
       # Download Module artifact
       - name: Download artifact for Release
         id: download-artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: Module
           path: ./Module
@@ -174,7 +174,7 @@ jobs:
       # Download Module artifact
       - name: Download Module artifact for Release
         id: download-artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: Module
           path: ./Pri.Essentials.DotnetPsCmds

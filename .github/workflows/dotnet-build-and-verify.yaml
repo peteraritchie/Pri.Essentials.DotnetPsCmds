@@ -106,7 +106,7 @@ jobs:
 
       - name: Release notes artifact contents to file
         if: ${{ inputs.release-notes-artifact-name != ''}}
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.release-notes-artifact-name }}
 
